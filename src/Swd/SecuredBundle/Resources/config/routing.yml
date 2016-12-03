@@ -1,0 +1,3 @@
+login:
+    path:     /secured/login
+    defaults: { _controller: SecuredBundle:Login:login }

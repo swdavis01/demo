@@ -1,0 +1,32 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+
+    encoders:
+        Swd\SecuredBundle\Entity\User: bcrypt
+
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        my_user_provider:
+            id: swd_user_provider
+        #database_users:
+           #entity: { class: SecuredBundle:User, property: username }
+           #entity: { class: jghfSecuredBundle:User }
+
+    firewalls:
+        secured_area:
+            pattern: ^/admin
+            provider: my_user_provider
+            anonymous: false
+            form_login:
+                check_path: login
+                login_path: login
+
+            logout:
+                path: security_logout
+                target: homepage
+
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false

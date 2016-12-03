@@ -1,0 +1,5 @@
+services:
+  swd_user_provider:
+    class: Swd\SecuredBundle\Repository\UserRepository
+    arguments: ["@doctrine", "@doctrine.orm.mapping.class_metadata"]
+
