@@ -29,5 +29,9 @@ php bin/console doctrine:mapping:import --force SecuredBundle xml
 Generate entities with annotaions:  
 php bin/console doctrine:mapping:convert annotation ./src  
 Create getters and setters:  
-php bin/console doctrine:generate:entities SecuredBundle  
+php bin/console doctrine:generate:entities SecuredBundle 
+   
+## Install XDebug  
+sudo apt-get install php-xdebug  
+ 
 

@@ -1,5 +1,45 @@
-services:
-  swd_user_provider:
-    class: Swd\SecuredBundle\Repository\UserRepository
-    arguments: ["@doctrine", "@doctrine.orm.mapping.class_metadata"]
+parameters:
+  gbx.security_success_handler.class: Swd\SecuredBundle\Handlers\SuccessHandler
+  security_params:
+    refreshCaching: true
+    refreshesAllowed: 5
 
+services:
+
+    platform.user.manager:
+        class: Doctrine\ORM\EntityManager
+        factory: ['@doctrine','getManagerForClass']
+        arguments: ['Swd\SecuredBundle\Entity\User']
+    platform.user.repository:
+        class: Swd\SecuredBundle\Repository\UserRepository
+        factory: ['@platform.user.manager','getRepository']
+        arguments: ['Swd\SecuredBundle\Entity\User']
+    swd_user_provider:
+        class: Swd\SecuredBundle\Providers\UserProvider
+        arguments: ['@platform.user.repository']
+#    swd_user_provider2:
+#        class: Swd\SecuredBundle\Repository\UserRepository
+#        #arguments: ["@doctrine", "@doctrine.orm.mapping.class_metadata"]
+#        factory:
+#            - "@doctrine.orm.entity_manager"
+#            - getRepository
+#        arguments: [Swd\SecuredBundle\Entity\User]
+#
+#    gbx_dom_user_provider:
+#        class: Swd\SecuredBundle\Providers\User\GbxDomUserProvider
+#        arguments: [ "@session", "%security_params%", "@service_container" ]
+#
+#    security.authentication_provider.gbx_dom:
+#        class: Swd\SecuredBundle\Providers\Authentication\GbxDomAuthenticatonProvider
+#        arguments: [ "@gbx_dom_user_provider", "@security.user_checker", '', "@security.encoder_factory", "%security.authentication.hide_user_not_found%" ]
+#        calls:
+#            - [ setSession, [ "@session" ] ]
+#
+#    gbx.security_success_handler:
+#        class: "%gbx.security_success_handler.class%"
+#        arguments: [ "@security.http_utils", [] ]
+#        calls:
+#            - [ setRouter, [ "@router" ] ]
+#            - [ setSession, [ "@session" ] ]
+#            # necessary to pass the container - we need the DOM, but can't instigate it on the login screen
+#            - [ setContainer, [ "@service_container" ] ]

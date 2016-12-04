@@ -3,30 +3,54 @@
 security:
 
     encoders:
-        Swd\SecuredBundle\Entity\User: bcrypt
+        Swd\SecuredBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 12
 
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        my_user_provider:
+        swd_user_provider:
             id: swd_user_provider
         #database_users:
            #entity: { class: SecuredBundle:User, property: username }
            #entity: { class: jghfSecuredBundle:User }
+    providers:
+        gbx_user_provider:
+            id: gbx_dom_user_provider
 
     firewalls:
-        secured_area:
-            pattern: ^/admin
-            provider: my_user_provider
-            anonymous: false
-            form_login:
-                check_path: login
-                login_path: login
 
+        secured_area:
+            pattern: ^/security
+            anonymous: ~
+            form_login:
+                check_path: /security/login_check
+                login_path: /security/login
+                #provider: gbx_user_provider
+                provider: swd_user_provider
+                #success_handler: gbx.security_success_handler
             logout:
-                path: security_logout
-                target: homepage
+                path: /security/logout
+                #handlers: [gbx_auth_server_logout]
+                target: /security/login
+
+#        secured_area:
+#            pattern: ^/admin
+#            provider: my_user_provider
+#            anonymous: false
+#            form_login:
+#                check_path: login
+#                login_path: login
+#
+#            logout:
+#                path: security_logout
+#                target: homepage
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+    access_control:
+        - { path: ^/security/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
