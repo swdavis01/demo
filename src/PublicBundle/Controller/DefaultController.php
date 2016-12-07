@@ -19,14 +19,14 @@ class DefaultController extends Controller
 			);
 		}
 
-		$plainPassword = 'admin';
+		/*$plainPassword = 'admin';
 		$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
 		$encoded = $encoder->encodePassword($user->getUsername(), $plainPassword);
 
 		$user->setPassword($encoded);
 
 		$em = $this->getDoctrine()->getManager();
-		$em->flush();
+		$em->flush();*/
 
 		echo "<pre>"; print_r( $user ); echo "</pre>";
 

@@ -21,18 +21,18 @@ security:
     firewalls:
 
         secured_area:
-            pattern: ^/security
+            pattern: ^/admin
             anonymous: ~
             form_login:
-                check_path: /security/login_check
-                login_path: /security/login
+                check_path: /admin/security/login_check
+                login_path: /admin/security/login
                 #provider: gbx_user_provider
                 provider: swd_user_provider
                 #success_handler: gbx.security_success_handler
             logout:
-                path: /security/logout
+                path: /admin/security/logout
                 #handlers: [gbx_auth_server_logout]
-                target: /security/login
+                target: /admin/security/login
 
 #        secured_area:
 #            pattern: ^/admin
@@ -52,5 +52,5 @@ security:
             security: false
 
     access_control:
-        - { path: ^/security/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/security/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }

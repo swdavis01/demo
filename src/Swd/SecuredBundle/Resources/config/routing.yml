@@ -1,7 +1,7 @@
 login:
-    path:     /security/login
+    path:     /admin/security/login
     defaults: { _controller: SecuredBundle:Login:login }
 login_check:
-    path:  /security/login_check
+    path:  /admin/security/login_check
 logout:
-    path: /security/logout
+    path: /admin/security/logout
