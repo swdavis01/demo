@@ -206,7 +206,14 @@ class User implements AdvancedUserInterface, \Serializable
 
 
 
+	/**
+	 * From here onwards custom code
+	 */
 
+	/**
+	 * @var array
+	 */
+    private $roles = array('ROLE_USER', 'ROLE_ADMIN');
 
 	public function __construct()
 	{
@@ -264,7 +271,7 @@ class User implements AdvancedUserInterface, \Serializable
 
 	public function getRoles()
 	{
-		return array('ROLE_USER', 'ROLE_ADMIN');
+		return $this->roles;
 	}
 
 	public function eraseCredentials()

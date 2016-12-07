@@ -30,7 +30,7 @@ class UserProvider implements UserProviderInterface
 
 		try {
 			$user = $q->getSingleResult();
-			//echo "<pre>"; print_r( $user ); echo "</pre>"; exit;
+			echo "<pre>"; print_r( $user ); echo "</pre>"; exit;
 		} catch (NoResultException $e) {
 			$message = sprintf(
 				'Unable to find an active admin MyAwesomeBundle:User object identified by "%s".',
