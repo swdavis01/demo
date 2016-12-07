@@ -11,12 +11,6 @@ security:
     providers:
         swd_user_provider:
             id: swd_user_provider
-        #database_users:
-           #entity: { class: SecuredBundle:User, property: username }
-           #entity: { class: jghfSecuredBundle:User }
-    providers:
-        gbx_user_provider:
-            id: gbx_dom_user_provider
 
     firewalls:
 
@@ -26,25 +20,10 @@ security:
             form_login:
                 check_path: /admin/security/login_check
                 login_path: /admin/security/login
-                #provider: gbx_user_provider
                 provider: swd_user_provider
-                #success_handler: gbx.security_success_handler
             logout:
                 path: /admin/security/logout
-                #handlers: [gbx_auth_server_logout]
                 target: /admin/security/login
-
-#        secured_area:
-#            pattern: ^/admin
-#            provider: my_user_provider
-#            anonymous: false
-#            form_login:
-#                check_path: login
-#                login_path: login
-#
-#            logout:
-#                path: security_logout
-#                target: homepage
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:

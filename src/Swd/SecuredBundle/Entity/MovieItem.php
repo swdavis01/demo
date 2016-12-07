@@ -57,5 +57,134 @@ class MovieItem
     private $id;
 
 
-}
 
+    /**
+     * Set year
+     *
+     * @param integer $year
+     *
+     * @return MovieItem
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    /**
+     * Get year
+     *
+     * @return integer
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * Set formatId
+     *
+     * @param integer $formatId
+     *
+     * @return MovieItem
+     */
+    public function setFormatId($formatId)
+    {
+        $this->formatId = $formatId;
+
+        return $this;
+    }
+
+    /**
+     * Get formatId
+     *
+     * @return integer
+     */
+    public function getFormatId()
+    {
+        return $this->formatId;
+    }
+
+    /**
+     * Set imdbNumber
+     *
+     * @param integer $imdbNumber
+     *
+     * @return MovieItem
+     */
+    public function setImdbNumber($imdbNumber)
+    {
+        $this->imdbNumber = $imdbNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get imdbNumber
+     *
+     * @return integer
+     */
+    public function getImdbNumber()
+    {
+        return $this->imdbNumber;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return MovieItem
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return MovieItem
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

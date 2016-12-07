@@ -8,38 +8,28 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\NoResultException;
+use Swd\SecuredBundle\Entity\User;
 
 class UserProvider implements UserProviderInterface
 {
 	protected $userRepository;
+	protected $userRoleRepository;
 
-	public function __construct(ObjectRepository $userRepository){
+	public function __construct(ObjectRepository $userRepository, ObjectRepository $userRoleRepository){
 		$this->userRepository = $userRepository;
+		$this->userRoleRepository = $userRoleRepository;
 	}
 
 	public function loadUserByUsername($username)
 	{
-		$q = $this->userRepository
-			->createQueryBuilder('u')
-			->where('u.username = :username')
-			->setParameter('username', $username)
-			->getQuery();
-
-		//echo "<pre>"; print_r( $this->userRepository ); echo "</pre>"; exit;
-		//echo "Username={$username}"; exit;
-
-		try {
-			$user = $q->getSingleResult();
-			echo "<pre>"; print_r( $user ); echo "</pre>"; exit;
-		} catch (NoResultException $e) {
-			$message = sprintf(
-				'Unable to find an active admin MyAwesomeBundle:User object identified by "%s".',
-				$username
-			);
-			throw new UsernameNotFoundException($message, 0, $e);
+		$user = $this->userRepository->findOneByUsername( $username );
+		if ( is_object( $user ) )
+		{
+			$user = $this->setRoles( $user );
+			return $user;
 		}
 
-		return $user;
+		throw new UsernameNotFoundException( "Unable to find an admin user " . $username, 0 );
 	}
 
 	public function refreshUser(UserInterface $user)
@@ -54,11 +44,36 @@ class UserProvider implements UserProviderInterface
 			);
 		}
 
-		return $this->userRepository->find($user->getId());
+		$user = $this->userRepository->find($user->getId());
+		$user = $this->setRoles( $user );
+
+		return $user;
 	}
 
 	public function supportsClass($class)
 	{
 		return $this->userRepository->getClassName() === $class || is_subclass_of($class, $this->userRepository->getClassName());
+	}
+
+	private function setRoles( User $user )
+	{
+		if ( is_object( $user ) )
+		{
+			$roles = $this->userRoleRepository->findByUserId( $user->getId() );
+			if ( is_array( $roles ) )
+			{
+				$userRoles = array();
+				foreach( $roles as $role )
+				{
+					$userRoles[] = $role->getRole();
+				}
+				$user->setRoles( $userRoles );
+				//echo "<pre>"; print_r( $user ); echo "</pre>"; exit;
+			}
+
+			return $user;
+		}
+
+		throw new UsernameNotFoundException( "Unable to find user roles for " . $username, 0 );
 	}
 }

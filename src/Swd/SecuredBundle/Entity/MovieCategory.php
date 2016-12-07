@@ -29,5 +29,38 @@ class MovieCategory
     private $id;
 
 
-}
 
+    /**
+     * Set category
+     *
+     * @param string $category
+     *
+     * @return MovieCategory
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

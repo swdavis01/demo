@@ -102,13 +102,6 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getPassword()
     {
-		if ( !is_integer( $this->password ) )
-		{
-			$password = stream_get_contents($this->password);
-			//echo "<pre>"; var_dump($password); echo "</pre>";
-			return $password;
-		}
-
 		return $this->password;
     }
 
@@ -213,7 +206,7 @@ class User implements AdvancedUserInterface, \Serializable
 	/**
 	 * @var array
 	 */
-    private $roles = array('ROLE_USER', 'ROLE_ADMIN');
+    private $roles = array();
 
 	public function __construct()
 	{
@@ -267,6 +260,11 @@ class User implements AdvancedUserInterface, \Serializable
 		// you *may* need a real salt depending on your encoder
 		// see section on salt below
 		return null;
+	}
+
+	public function setRoles( $roles )
+	{
+		$this->roles = $roles;
 	}
 
 	public function getRoles()

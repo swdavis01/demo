@@ -27,7 +27,7 @@ Generate maps first:
 php bin/console doctrine:mapping:import --force SecuredBundle xml
 
 Generate entities with annotaions:  
-php bin/console doctrine:mapping:convert annotation ./src  
+php bin/console doctrine:mapping:convert --force annotation ./src  
 Create getters and setters:  
 php bin/console doctrine:generate:entities SecuredBundle 
    
