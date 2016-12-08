@@ -3,6 +3,7 @@
 namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * User
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user", indexes={@ORM\Index(name="username", columns={"username"})})
  * @ORM\Entity
  */
-class User
+class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @var boolean
@@ -187,4 +188,96 @@ class User
     {
         return $this->id;
     }
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * From here onwards custom code
+	 */
+
+	/**
+	 * @var array
+	 */
+	private $roles = array('ROLE_USER', 'ROLE_ADMIN');
+
+	public function __construct()
+	{
+		$this->isActive = true;
+		//echo "User"; exit;
+		// may not be needed, see section on salt below
+		// $this->salt = md5(uniqid(null, true));
+	}
+
+	/** @see \Serializable::serialize() */
+	public function serialize()
+	{
+		return serialize(array(
+			$this->id,
+			$this->username,
+			$this->password,
+			// see section on salt below
+			// $this->salt,
+		));
+	}
+
+	/** @see \Serializable::unserialize() */
+	public function unserialize($serialized)
+	{
+		list (
+			$this->id,
+			$this->username,
+			$this->password,
+			// see section on salt below
+			// $this->salt
+			) = unserialize($serialized);
+	}
+
+	public function isAccountNonExpired()
+	{
+		return true;
+	}
+
+	public function isAccountNonLocked()
+	{
+		return true;
+	}
+
+	public function isCredentialsNonExpired()
+	{
+		return true;
+	}
+
+	public function getSalt()
+	{
+		// you *may* need a real salt depending on your encoder
+		// see section on salt below
+		return null;
+	}
+
+	public function setRoles( $roles )
+	{
+		$this->roles = $roles;
+	}
+
+	public function getRoles()
+	{
+		return $this->roles;
+	}
+
+	public function eraseCredentials()
+	{
+	}
+
+	public function isEnabled()
+	{
+		return $this->isActive;
+	}
 }
