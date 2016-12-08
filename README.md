@@ -50,7 +50,16 @@ php bin/console doctrine:generate:entities SecuredBundle
 
 Doctrine keeps config in:
 src/Swd/CoreBundle/Resources/config/doctrine/     
-   
+
+## Session Management
+app/config/config.yml  
+framework:  
+session:  
+cookie_lifetime: 86400  
+gc_maxlifetime: 1800  
+gc_probability: 1  
+gc_divisor: 1
+
 ## Install XDebug  
 sudo apt-get install php-xdebug  
 
