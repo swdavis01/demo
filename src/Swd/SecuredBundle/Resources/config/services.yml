@@ -24,3 +24,6 @@ services:
     swd_user_provider:
         class: Swd\SecuredBundle\Providers\UserProvider
         arguments: ['@platform.user.repository', '@platform.user_role.repository']
+    swd_security_logout:
+        class: Swd\SecuredBundle\Handlers\LogoutHandler
+        arguments: ['@session']

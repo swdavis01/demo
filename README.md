@@ -22,7 +22,13 @@ The services that access the database live in this bundle.
 
 ## Create Security bundle
 php bin/console generate:bundle --bundle-name=SecurityBundle
-This is a shared bundle that can be reused across projects
+This is a shared bundle that can be reused across projects.  
+To do:  
+Look into handlers    
+Handlers/SuccessHandler.php 
+Handlers/LogoutHandler.php 
+Handlers/AccessDeniedHandler.php
+
 
 ## Create Public Bundle
 php bin/console generate:bundle --bundle-name=PublicBundle

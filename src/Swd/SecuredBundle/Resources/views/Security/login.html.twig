@@ -9,6 +9,15 @@
     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 {% endif %}
 
+{# Render all flash bag messages #}
+{% for label, flashes in app.session.flashbag.all %}
+    {% for flash in flashes %}
+        <div>
+            {{ flash }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
 <form action="{{ path('login_check') }}" method="post">
     <label for="username">Username:</label>
     {#<input type="text" id="username" name="_username" value="{{ last_username }}" />#}

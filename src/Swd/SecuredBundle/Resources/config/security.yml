@@ -21,9 +21,11 @@ security:
                 check_path: /admin/security/login_check
                 login_path: /admin/security/login
                 provider: swd_user_provider
+                #success_handler: swd_security_login_success
             logout:
                 path: /admin/security/logout
                 target: /admin/security/login
+                handlers: [swd_security_logout]
 
         # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
