@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Swd\SecuredBundle\SecuredBundle(),
             new PublicBundle\PublicBundle(),
             new AdminBundle\AdminBundle(),
+            new Swd\CoreBundle\CoreBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
