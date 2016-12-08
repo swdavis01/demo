@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\NoResultException;
-use Swd\SecuredBundle\Entity\User;
+use Swd\CoreBundle\Entity\User;
 
 class UserProvider implements UserProviderInterface
 {

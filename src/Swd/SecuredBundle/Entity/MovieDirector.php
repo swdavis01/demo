@@ -29,38 +29,5 @@ class MovieDirector
     private $id;
 
 
-
-    /**
-     * Set director
-     *
-     * @param string $director
-     *
-     * @return MovieDirector
-     */
-    public function setDirector($director)
-    {
-        $this->director = $director;
-
-        return $this;
-    }
-
-    /**
-     * Get director
-     *
-     * @return string
-     */
-    public function getDirector()
-    {
-        return $this->director;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 }
+

@@ -1,23 +1,23 @@
 <?php
 
-namespace Swd\SecuredBundle\Entity;
+namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MovieCategory
+ * MovieGenre
  *
- * @ORM\Table(name="movie_category", indexes={@ORM\Index(name="category", columns={"category"})})
+ * @ORM\Table(name="movie_genre", indexes={@ORM\Index(name="genre", columns={"genre"})})
  * @ORM\Entity
  */
-class MovieCategory
+class MovieGenre
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="category", type="string", length=50, nullable=false)
+     * @ORM\Column(name="genre", type="string", length=50, nullable=false)
      */
-    private $category;
+    private $genre;
 
     /**
      * @var integer

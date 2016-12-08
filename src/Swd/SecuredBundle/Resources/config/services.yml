@@ -9,19 +9,19 @@ services:
     platform.user.manager:
         class: Doctrine\ORM\EntityManager
         factory: ['@doctrine','getManagerForClass']
-        arguments: ['Swd\SecuredBundle\Entity\User']
+        arguments: ['Swd\CoreBundle\Entity\User']
     platform.user.repository:
         class: Swd\SecuredBundle\Repository\UserRepository
         factory: ['@platform.user.manager','getRepository']
-        arguments: ['Swd\SecuredBundle\Entity\User']
+        arguments: ['Swd\CoreBundle\Entity\User']
     platform.user_role.manager:
         class: Doctrine\ORM\EntityManager
         factory: ['@doctrine','getManagerForClass']
-        arguments: ['Swd\SecuredBundle\Entity\UserRole']
+        arguments: ['Swd\CoreBundle\Entity\UserRole']
     platform.user_role.repository:
         class: Swd\SecuredBundle\Repository\UserRepository
         factory: ['@platform.user.manager','getRepository']
-        arguments: ['Swd\SecuredBundle\Entity\UserRole']
+        arguments: ['Swd\CoreBundle\Entity\UserRole']
     swd_user_provider:
         class: Swd\SecuredBundle\Providers\UserProvider
         arguments: ['@platform.user.repository', '@platform.user_role.repository']

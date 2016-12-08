@@ -1,6 +1,6 @@
 <?php
 
-namespace Swd\SecuredBundle\Entity;
+namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
