@@ -1,5 +1,4 @@
 parameters:
-  swd.security_success_handler.class: Swd\SecuredBundle\Handlers\SuccessHandler
   security_params:
     refreshCaching: true
     refreshesAllowed: 5
