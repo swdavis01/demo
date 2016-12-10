@@ -8,7 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-		$userId = 1;
+		/*$userId = 1;
 		$user = $this->getDoctrine()
 			->getRepository('SecuredBundle:User')
 			->find($userId);
@@ -17,7 +17,7 @@ class DefaultController extends Controller
 			throw $this->createNotFoundException(
 				'No user found for id '.$userId
 			);
-		}
+		}*/
 
 		/*$plainPassword = 'admin';
 		$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
@@ -28,7 +28,7 @@ class DefaultController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$em->flush();*/
 
-		echo "<pre>"; print_r( $user ); echo "</pre>";
+		//echo "<pre>"; print_r( $user ); echo "</pre>";
 
         return $this->render('PublicBundle:Default:index.html.twig');
     }
