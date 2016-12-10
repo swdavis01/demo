@@ -63,6 +63,15 @@ gc_divisor: 1
 ## Install XDebug  
 sudo apt-get install php-xdebug  
 
+## Admin Theme  
+https://gurayyarar.github.io/AdminBSBMaterialDesign/documentation/#/
+
+## Cache  
+php bin/console cache:clear --env=dev
+If problems:
+sudo rm -Rf var/cache/*
+
+
 Today  
 Create core bundle  
 Move entity objects to core  
