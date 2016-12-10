@@ -64,7 +64,9 @@ gc_divisor: 1
 sudo apt-get install php-xdebug  
 
 ## Admin Theme  
-https://gurayyarar.github.io/AdminBSBMaterialDesign/documentation/#/
+https://gurayyarar.github.io/AdminBSBMaterialDesign/documentation/#/  
+Authentication disabled for admin_theme in:  
+src\Swd\SecuredBundle\Resources\config\security.yml  
 
 ## Cache  
 php bin/console cache:clear --env=dev
