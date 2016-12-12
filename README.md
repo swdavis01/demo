@@ -75,8 +75,8 @@ sudo rm -Rf var/cache/*
 
 
 Today  
-Create core bundle  
-Move entity objects to core  
 Look into Doctrine join table
+Move auth to core
+Connect login to them
  
 
