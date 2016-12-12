@@ -41,12 +41,12 @@ This is a standalone bundle specific to this project
 ## Doctrine
 ### Generate entities from the database schema
 Generate maps first:  
-php bin/console doctrine:mapping:import --force SecuredBundle xml
+php bin/console doctrine:mapping:import --force CoreBundle xml
 
 Generate entities with annotations:  
 php bin/console doctrine:mapping:convert --force annotation ./src  
 Create getters and setters:  
-php bin/console doctrine:generate:entities SecuredBundle 
+php bin/console doctrine:generate:entities CoreBundle 
 
 Doctrine keeps config in:
 src/Swd/CoreBundle/Resources/config/doctrine/     

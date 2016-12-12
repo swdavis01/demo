@@ -26,7 +26,7 @@ class LogoutHandler implements LogoutHandlerInterface
 	{
 		$user = $authToken->getUser();
 
-		$this->session->getFlashBag()->add("notice", "Goodbye " . $user->getUsername() . ". You have been successfully been logged out.");
+		$this->session->getFlashBag()->add("notice", "Goodbye " . $user->getUsername() . ". You have been been logged out.");
 		$this->session->getFlashBag()->add("notice", "It's a shame though because I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do.");
 
 		return $response;
