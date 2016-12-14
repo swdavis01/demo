@@ -8,3 +8,7 @@ logout:
 forgot_password:
     path:     /admin/security/login
     defaults: { _controller: SecuredBundle:Login:login }
+swd_admin_user_list:
+    path:     /admin/user/list
+    defaults: { _controller: SecuredBundle:User:list }
+

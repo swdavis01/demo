@@ -12,6 +12,6 @@ class DefaultController extends Controller
 		{
 			echo "Yes";
 		}*/
-        return $this->render('AdminBundle:Default:index.html.twig');
+        return $this->render('AdminBundle:Default:home.html.twig');
     }
 }

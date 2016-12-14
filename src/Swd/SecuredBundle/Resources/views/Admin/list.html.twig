@@ -1,0 +1,51 @@
+{% extends 'AdminBundle:default:index.html.twig' %}
+
+{% block menu_swd_admin_user %}active{% endblock %}
+{% block menu_swd_admin_user_list %}active{% endblock %}
+
+{% block page_title %}Users{% endblock %}
+
+{% block body %}
+
+    <div id="example">
+        <div id="grid"></div>
+        <script>
+            $(document).ready(function () {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        type: "odata",
+                        transport: {
+                            read: "http://demos.telerik.com/kendo-ui/service/Northwind.svc/Customers"
+                        },
+                        pageSize: 20
+                    },
+                    height: 550,
+                    sortable: true,
+                    filterable: {
+                        mode: "row"
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: false,
+                        buttonCount: 5
+                    },
+                    columns: [{
+                        field: "ContactName",
+                        title: "Contact Name",
+                        width: 240
+                    }, {
+                        field: "ContactTitle",
+                        title: "Contact Title"
+                    }, {
+                        field: "CompanyName",
+                        title: "Company Name"
+                    }, {
+                        field: "Country",
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+    </div>
+
+{% endblock %}

@@ -2,11 +2,17 @@
 
 {% block title %}Demo Admin Application{% endblock %}
 
+{# Menu Item Blocks to turn the menu items on #}
+{% block menu_swd_admin_home %}{% endblock %}
+
+{% block menu_swd_admin_user %}{% endblock %}
+{% block menu_swd_admin_user_list %}{% endblock %}
+
 {% block menu %}
     <div class="menu">
         <ul class="list">
             <li class="header">MAIN NAVIGATION</li>
-            <li class="active">
+            <li class="{{ block('menu_swd_admin_home') }}">
                 <a href="index.html">
                     <i class="material-icons">home</i>
                     <span>Home</span>
@@ -26,14 +32,14 @@
                     </li>
                 </ul>
             </li>
-            <li>
+            <li class="{{ block('menu_swd_admin_user') }}">
                 <a href="javascript:void(0);" class="menu-toggle">
                     <i class="material-icons">assignment</i>
                     <span>Users</span>
                 </a>
                 <ul class="ml-menu">
-                    <li>
-                        <a href="pages/forms/basic-form-elements.html">List</a>
+                    <li class="{{ block('menu_swd_admin_user_list') }}">
+                        <a href="{{ path( 'swd_admin_user_list' ) }}">List</a>
                     </li>
                     <li>
                         <a href="pages/forms/advanced-form-elements.html">Permissions</a>
