@@ -1,4 +1,4 @@
-admin_homepage:
+swd_admin_home:
     path:     /
     defaults: { _controller: AdminBundle:Default:index }
 
