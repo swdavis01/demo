@@ -204,9 +204,14 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 
 	/**
-	 * @var array
+	 * Many Users have Many Roles.
+	 * @ManyToMany(targetEntity="Group")
+	 * @JoinTable(name="users_groups",
+	 *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+	 *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
+	 *      )
 	 */
-	private $roles = array('ROLE_USER', 'ROLE_ADMIN');
+	private $roles = array();
 
 	public function __construct()
 	{

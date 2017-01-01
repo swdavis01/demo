@@ -66,4 +66,35 @@ class UserService extends BaseService
 
 		return $user;
 	}
+
+	/**
+	 * @param $id
+	 * @return User
+	 */
+	public function getUsers( $params = array() )
+	{
+		$page = 1;
+		$username = "asfsaf";
+
+		extract( $params );
+
+		//$result = $this->em->getRepository( 'CoreBundle:User' )->findAll();
+		//print_r($users); exit;
+
+		$query = $this->em->createQuery(
+			'SELECT 
+				u
+    		FROM 
+    			CoreBundle:User u
+    		WHERE 
+    			u.username != :username
+    		ORDER BY 
+    			u.username 
+    		ASC'
+		)->setParameter('username', $username);
+
+		$result = $query->getResult();
+
+		return $result;
+	}
 }

@@ -11,4 +11,7 @@ forgot_password:
 swd_admin_user_list:
     path:     /admin/user/list
     defaults: { _controller: SecuredBundle:User:list }
+swd_admin_get_user_list:
+    path:     /admin/user/get_list
+    defaults: { _controller: SecuredBundle:User:getList }
 
