@@ -87,10 +87,10 @@ class UserService extends BaseService
 
 		$query = $this->em->createQuery(
 			'SELECT 
-				u
+				u, r
     		FROM 
     			CoreBundle:User u
-    			JOIN CoreBundle:Role r 
+    			JOIN u.roles r 
     		WHERE 
     			u.username != :username
     		ORDER BY 

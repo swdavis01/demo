@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UserRole
  *
- * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="role_id", columns={"role_id"}), @ORM\Index(name="item_director", columns={"user_id", "role_id"})})
+ * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="role_id", columns={"role_id"}), @ORM\Index(name="user_role2", columns={"user_id", "role_id"})})
  * @ORM\Entity
  */
 class UserRole
@@ -35,7 +35,17 @@ class UserRole
      */
     private $id;
 
+	/**
+	 * @ORM\ManyToOne(targetEntity="User")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	 */
+	private $user;
 
+	/**
+	 * @ORM\ManyToOne(targetEntity="Role")
+	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+	 */
+	private $role;
 
     /**
      * Set userId
@@ -94,4 +104,14 @@ class UserRole
     {
         return $this->id;
     }
+
+	/**
+	 * Get roleId
+	 *
+	 * @return Swd\CoreBundle\Entity\Role
+	 */
+	public function getRole()
+	{
+		return $this->role;
+	}
 }

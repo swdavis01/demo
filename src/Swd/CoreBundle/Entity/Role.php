@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Role
  *
- * @ORM\Table(name="role", indexes={@ORM\Index(name="role", columns={"role"})})
+ * @ORM\Table(name="role", indexes={@ORM\Index(name="name", columns={"name"})})
  * @ORM\Entity
  */
 class Role
@@ -15,9 +15,9 @@ class Role
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $role;
+    private $name;
 
     /**
      * @var integer
@@ -29,27 +29,27 @@ class Role
     private $id;
 
     /**
-     * Set role
+     * Set name
      *
-     * @param string $role
+     * @param string $name
      *
      * @return Role
      */
-    public function setRole($role)
+    public function setName($name)
     {
-        $this->role = $role;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get role
+     * Get name
      *
      * @return string
      */
-    public function getRole()
+    public function getName()
     {
-        return $this->role;
+        return $this->name;
     }
 
     /**
@@ -63,12 +63,7 @@ class Role
     }
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="User")
-	 * @ORM\JoinTable(name="user_role",
-	 *         joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-	 *         inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
-	 * )
-	 * @var User[]
+	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="role")
 	 */
 	protected $users;
 

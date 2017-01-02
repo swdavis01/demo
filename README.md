@@ -40,17 +40,16 @@ This is a standalone bundle specific to this project
 
 ## Doctrine
 ### Generate entities from the database schema
-Generate entities with annotations:  
+Generate entities with annotations from existing database:  
+DON'T DO THIS. Create / update database schema from entities instead.
 php bin/console doctrine:mapping:convert --force annotation ./src  
 Create getters and setters:  
 php bin/console doctrine:generate:entities CoreBundle 
 
-Doctrine keeps config in:
-src/Swd/CoreBundle/Resources/config/doctrine/
-    
+Create / update database schema from entities  
 php bin/console doctrine:schema:update --force --complete
-Or, alternatively, let Doctrine dump the SQL commands it would execute:
 
+Or, alternatively, let Doctrine dump the SQL commands it would execute:
 php bin/console doctrine:schema:update --dump-sql --complete
 
 Check if mapping in sync   
@@ -101,5 +100,8 @@ mappings:
         type: annotation  
 Could then delete folder:  
 src/Swd/CoreBundle/Resources/config/doctrine  
-because no longer used          
+because no longer used.  
+         
+### Mapping
+Replaced the many-to-many annotation mapping directly between two main entity classes with a one-to-many annotation in the main entity classes and two 'many-to-one' annotations in the Associative Entity class.         
 

@@ -3,6 +3,7 @@
 namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Swd\CoreBundle\Services\CommonService;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -188,12 +189,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="Role")
-	 * @ORM\JoinTable(name="user_role",
-	 *         joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
-	 *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
-	 * )
-	 * @var Role[]
+	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="user")
 	 */
 	protected $roles;
 
@@ -260,8 +256,9 @@ class User implements AdvancedUserInterface, \Serializable
 		$roles = array();
 		foreach( $this->roles as $role )
 		{
-			$roles[] = $role->getRole();
+			$roles[] = $role->getRole()->getName();
 		}
+		//CommonService::debug( $roles ); exit;
 		return $roles;
 	}
 
