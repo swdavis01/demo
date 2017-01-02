@@ -4,9 +4,6 @@ namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Swd\CoreBundle\Entity\Role;
-use Swd\CoreBundle\Entity\UserRole;
-use Swd\CoreBundle\Services\CommonService;
 
 /**
  * User
@@ -59,8 +56,6 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-
 
     /**
      * Set isActive
@@ -192,37 +187,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->id;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
 	 * @ORM\ManyToMany(targetEntity="Role")
 	 * @ORM\JoinTable(name="user_role",
@@ -238,9 +202,6 @@ class User implements AdvancedUserInterface, \Serializable
 	{
 		$this->isActive = true;
 		$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
-		//echo "User"; exit;
-		// may not be needed, see section on salt below
-		// $this->salt = md5(uniqid(null, true));
 	}
 
 	/** @see \Serializable::serialize() */
@@ -250,8 +211,6 @@ class User implements AdvancedUserInterface, \Serializable
 			$this->id,
 			$this->username,
 			$this->password,
-			// see section on salt below
-			// $this->salt,
 		));
 	}
 
@@ -262,8 +221,6 @@ class User implements AdvancedUserInterface, \Serializable
 			$this->id,
 			$this->username,
 			$this->password,
-			// see section on salt below
-			// $this->salt
 			) = unserialize($serialized);
 	}
 

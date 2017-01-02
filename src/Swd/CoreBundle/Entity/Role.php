@@ -3,8 +3,6 @@
 namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Swd\CoreBundle\Entity\User;
-use Swd\CoreBundle\Entity\UserRole;
 
 /**
  * Role
@@ -29,8 +27,6 @@ class Role
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-
 
     /**
      * Set role
@@ -65,30 +61,6 @@ class Role
     {
         return $this->id;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="User")

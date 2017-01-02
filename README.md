@@ -40,9 +40,6 @@ This is a standalone bundle specific to this project
 
 ## Doctrine
 ### Generate entities from the database schema
-Generate maps first:  
-php bin/console doctrine:mapping:import --force CoreBundle xml
-
 Generate entities with annotations:  
 php bin/console doctrine:mapping:convert --force annotation ./src  
 Create getters and setters:  
