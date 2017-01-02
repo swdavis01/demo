@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Swd\CoreBundle\Entity\Role;
 use Swd\CoreBundle\Entity\UserRole;
+use Swd\CoreBundle\Services\CommonService;
 
 /**
  * User
@@ -236,7 +237,7 @@ class User implements AdvancedUserInterface, \Serializable
 	public function __construct()
 	{
 		$this->isActive = true;
-		//$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
 		//echo "User"; exit;
 		// may not be needed, see section on salt below
 		// $this->salt = md5(uniqid(null, true));
@@ -293,15 +294,16 @@ class User implements AdvancedUserInterface, \Serializable
 		$this->roles = $roles;
 	}
 
+	public function getObjectRoles() {
+		return $this->roles;
+	}
+
 	public function getRoles()
 	{
 		$roles = array();
-		if ( is_array( $this->roles ) )
+		foreach( $this->roles as $role )
 		{
-			foreach( $this->roles as $role )
-			{
-				$roles[] = $role->getRole();
-			}
+			$roles[] = $role->getRole();
 		}
 		return $roles;
 	}

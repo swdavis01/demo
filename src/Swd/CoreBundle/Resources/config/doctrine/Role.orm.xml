@@ -12,5 +12,6 @@
         <option name="fixed"/>
       </options>
     </field>
+    <many-to-many field="users" target-entity="User" />
   </entity>
 </doctrine-mapping>

@@ -24,7 +24,7 @@ class UserService extends BaseService
 	{
 		$query = $this->em->createQuery(
 			'SELECT 
-				u
+				u, r
     		FROM 
     			CoreBundle:User u
     			JOIN u.roles r 	
@@ -40,16 +40,8 @@ class UserService extends BaseService
 			var_dump($e); exit;
 		}
 
-		CommonService::debug( $user ); exit;
-		return $user;
-
-		$user = $this->em->getRepository('CoreBundle:User')->findOneByUsername( $username );
 		//CommonService::debug( $user ); exit;
-		if ( is_object( $user ) )
-		{
-			$user = $this->setRoles( $user );
-			return $user;
-		}
+		return $user;
 	}
 
 	/**
@@ -58,55 +50,22 @@ class UserService extends BaseService
 	 */
 	public function getUserById( $id )
 	{
-		$user = $this->em->getRepository( 'CoreBundle:User' )->findOneById( $id );
-		if ( is_object( $user ) )
-		{
-			$user = $this->setRoles( $user );
-			return $user;
-		}
-	}
-
-	/**
-	 * @param User $user
-	 * @return User
-	 */
-	private function setRoles( User $user )
-	{
-		if ( is_object( $user ) )
-		{
-			/*$roles = $this->em->getRepository( 'CoreBundle:UserRole' )->findByUserId( $user->getId() );
-			if ( is_array( $roles ) )
-			{
-				$userRoles = array();
-				foreach( $roles as $role )
-				{
-					$userRoles[] = $role->getRole();
-				}
-				$user->setRoles( $userRoles );
-			}*/
-
-			$query = $this->em->createQuery(
-				'SELECT 
-				ur, r
+		$query = $this->em->createQuery(
+			'SELECT 
+				u, r
     		FROM 
-    			CoreBundle:UserRole ur
-    			JOIN CoreBundle:Role r 
+    			CoreBundle:User u
+    			JOIN u.roles r 	
     		WHERE 
-    			ur.userId = :user_id
-    		ORDER BY 
-    			r.role 
-    		ASC'
-			)->setParameter('user_id', $user->getId());
+    			u.id = :id'
+		)->setParameter('id', $id);
 
-			try {
-				$roles = $query->getResult();
-			} catch ( \Doctrine\ORM\ORMException $e ) {
-				CommonService::debug($e); exit;
-			}
-			//CommonService::debug('getRoles'); exit;
-			CommonService::debug($roles); exit;
+		//CommonService::debug( $id ); exit;
 
-			$user->setRoles( $roles );
+		try {
+			$user = $query->getSingleResult();
+		} catch ( \Doctrine\ORM\ORMException $e ) {
+			var_dump($e); exit;
 		}
 
 		return $user;

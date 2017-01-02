@@ -33,5 +33,6 @@
         <option name="default">CURRENT_TIMESTAMP</option>
       </options>
     </field>
+    <many-to-many field="roles" target-entity="Role" />
   </entity>
 </doctrine-mapping>
