@@ -91,5 +91,18 @@ Today
 Look into Doctrine join table
 Move auth to core
 Connect login to them
- 
+
+## 2017-01-02
+Got stuck with doctrine / orm issue.  
+Setup annotations in entity but they were having no effect.  
+After wasting a full day of holidays realised that by default orm using xml definitions at:  
+src/Swd/CoreBundle/Resources/config/doctrine  
+To change set orm section in config:  
+app\config\config.yml
+mappings:  
+    CoreBundle:
+        type: annotation  
+Could then delete folder:  
+src/Swd/CoreBundle/Resources/config/doctrine  
+because no longer used          
 

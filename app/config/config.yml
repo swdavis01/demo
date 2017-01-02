@@ -71,9 +71,9 @@ doctrine:
         auto_mapping: true
         # SWD By default xml mapping is used
         # Wasted a day realising that annotations were not working because of this setting
-        #mappings:
-            #CoreBundle:
-                #type: annotation
+        mappings:
+            CoreBundle:
+                type: annotation
 
 # Swiftmailer Configuration
 swiftmailer:
