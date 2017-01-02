@@ -4,6 +4,7 @@ namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Swd\CoreBundle\Services\CommonService;
+use Swd\CoreBundle\Services\DateService;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -153,6 +154,16 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->created;
     }
+
+	/**
+	 * Get created
+	 *
+	 * @return string
+	 */
+	public function getCreatedDateTime()
+	{
+		return DateService::getDateTime( $this->created );
+	}
 
     /**
      * Set updated

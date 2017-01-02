@@ -39,12 +39,49 @@
                     width: 240,
                 },
                 {
-                    field: "created.timestamp",
+                    type: "datetime",
+                    field: "createdDateTime",
                     title: "Created",
-                    format: "{0:MM/dd/yyyy}"
+                    template: "#= kendo.toString(kendo.parseDate(createdDateTime), '{{ dateTimeFormat }}') #"
                 }]
             });
         });
+        $("#userGrid").delegate("tbody>tr", "dblclick", function(){
+            var item = $("#userGrid").data("kendoGrid").dataItem($(this))
+            var url = $('#swd_admin_user').html();
+            url = url.replace("id", item.id);
+            console.log(url);
+
+            var form = $("#swd_admin_user_form")
+
+            if (!form.data("kendoWindow"))
+            {
+                form.kendoWindow({
+                    content: url,
+                    title: "User Form",
+                    actions: ["Custom", "Pin", "Refresh", "Maximize", "Minimize", "Close"],
+                    draggable: false,
+                    height: "300px",
+                    modal: true,
+                    pinned: false,
+                    position: {
+                        top: 100,
+                        left: 100
+                    },
+                    resizable: false,
+                    width: "500px"
+                });
+            }
+
+            var formObject = form.data("kendoWindow");
+            formObject.refresh({
+                url: url
+            });
+            formObject.open().center();
+            formObject.maximize();
+        });
     </script>
+    <div id="swd_admin_user" style="display: none;">{{ path('swd_admin_user', {'id': 'id'}) }}</div>
+    <div id="swd_admin_user_form"></div>
 
 {% endblock %}

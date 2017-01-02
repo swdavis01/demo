@@ -14,4 +14,7 @@ swd_admin_user_list:
 swd_admin_get_user_list:
     path:     /admin/user/get_list
     defaults: { _controller: SecuredBundle:User:getList }
+swd_admin_user:
+    path:     /admin/user/{id}
+    defaults: { _controller: SecuredBundle:User:form }
 
