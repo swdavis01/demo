@@ -3,22 +3,17 @@
 namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Swd\CoreBundle\Entity\User;
+use Swd\CoreBundle\Entity\UserRole;
 
 /**
- * UserRole
+ * Role
  *
- * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
+ * @ORM\Table(name="role", indexes={@ORM\Index(name="role", columns={"role"})})
  * @ORM\Entity
  */
-class UserRole
+class Role
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="user_id", type="bigint", nullable=false)
-     */
-    private $userId;
-
     /**
      * @var string
      *
@@ -38,35 +33,11 @@ class UserRole
 
 
     /**
-     * Set userId
-     *
-     * @param integer $userId
-     *
-     * @return UserRole
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    /**
-     * Get userId
-     *
-     * @return integer
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
      * Set role
      *
      * @param string $role
      *
-     * @return UserRole
+     * @return Role
      */
     public function setRole($role)
     {
@@ -94,4 +65,42 @@ class UserRole
     {
         return $this->id;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * @ORM\ManyToMany(targetEntity="User")
+	 * @ORM\JoinTable(name="user_role",
+	 *         joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+	 *         inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+	 * )
+	 * @var User[]
+	 */
+	protected $users;
+
+	public function __construct() {
+		//$this->users = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 }

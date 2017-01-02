@@ -49,7 +49,20 @@ Create getters and setters:
 php bin/console doctrine:generate:entities CoreBundle 
 
 Doctrine keeps config in:
-src/Swd/CoreBundle/Resources/config/doctrine/     
+src/Swd/CoreBundle/Resources/config/doctrine/
+    
+php bin/console doctrine:schema:update --force --complete
+Or, alternatively, let Doctrine dump the SQL commands it would execute:
+
+php bin/console doctrine:schema:update --dump-sql --complete
+
+Check if mapping in sync   
+php bin/console doctrine:schema:update --force --complete   
+
+Clear cache
+php bin/console doctrine:cache:clear-metadata 
+php bin/console doctrine:cache:clear-query  
+php bin/console doctrine:cache:clear-result
 
 ## Session Management
 app/config/config.yml  

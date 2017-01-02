@@ -4,6 +4,8 @@ namespace Swd\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Swd\CoreBundle\Entity\Role;
+use Swd\CoreBundle\Entity\UserRole;
 
 /**
  * User
@@ -199,23 +201,42 @@ class User implements AdvancedUserInterface, \Serializable
 
 
 
-	/**
-	 * From here onwards custom code
-	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/**
-	 * Many Users have Many Roles.
-	 * @ManyToMany(targetEntity="Group")
-	 * @JoinTable(name="users_groups",
-	 *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-	 *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
-	 *      )
+	 * @ORM\ManyToMany(targetEntity="Role")
+	 * @ORM\JoinTable(name="user_role",
+	 *         joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
+	 *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+	 * )
+	 * @var Role[]
 	 */
-	private $roles = array();
+	protected $roles;
+
 
 	public function __construct()
 	{
 		$this->isActive = true;
+		//$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
 		//echo "User"; exit;
 		// may not be needed, see section on salt below
 		// $this->salt = md5(uniqid(null, true));
@@ -274,7 +295,20 @@ class User implements AdvancedUserInterface, \Serializable
 
 	public function getRoles()
 	{
-		return $this->roles;
+		$roles = array();
+		if ( is_array( $this->roles ) )
+		{
+			foreach( $this->roles as $role )
+			{
+				$roles[] = $role->getRole();
+			}
+		}
+		return $roles;
+	}
+
+	public function getRolesString()
+	{
+		return implode( ", ", $this->getRoles() );
 	}
 
 	public function eraseCredentials()

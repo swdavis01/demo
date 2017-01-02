@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UserRole
  *
- * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"})})
+ * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="role_id", columns={"role_id"})})
  * @ORM\Entity
  */
 class UserRole
@@ -20,11 +20,11 @@ class UserRole
     private $userId;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="role", type="string", length=255, nullable=false)
+     * @ORM\Column(name="role_id", type="bigint", nullable=false)
      */
-    private $role;
+    private $roleId;
 
     /**
      * @var integer
