@@ -103,5 +103,10 @@ src/Swd/CoreBundle/Resources/config/doctrine
 because no longer used.  
          
 ### Mapping
-Replaced the many-to-many annotation mapping directly between two main entity classes with a one-to-many annotation in the main entity classes and two 'many-to-one' annotations in the Associative Entity class.         
+Replaced the many-to-many annotation mapping directly between two main entity classes with a one-to-many annotation in the main entity classes and two 'many-to-one' annotations in the Associative Entity class.  
+
+## 2017-01-05  
+- Added voters to check that the logged in user has sufficient permissions to edit the user list.  
+- Added UserType class to enable user form to be used from anywhere.
+
 
