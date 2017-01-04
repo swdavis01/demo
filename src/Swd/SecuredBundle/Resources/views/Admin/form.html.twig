@@ -2,7 +2,12 @@
 
 {% block body %}
 
-    This is the user form. The id is {{ id }}.
-
+    <form action="{{ path('swd_admin_user', {'id': id}) }}" method="post" id="userForm">
+        <h2>User Form</h2>
+        <div>
+            {{ form_row(form.username) }}
+            {{ form_rest(form) }}
+        </div>
+    </form>
 
 {% endblock %}

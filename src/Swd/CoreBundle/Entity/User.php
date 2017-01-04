@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Services\DateService;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -33,6 +34,11 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, nullable=false)
+	 * @Assert\NotBlank()
+	 * @Assert\Email(
+	 *     message = "The username '{{ value }}' is not a valid email address",
+	 *     checkMX = true
+	 * )
      */
     private $username;
 
