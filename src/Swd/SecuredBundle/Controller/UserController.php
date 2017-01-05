@@ -3,6 +3,7 @@
 namespace Swd\SecuredBundle\Controller;
 
 use Swd\CoreBundle\Response\ApiResponse;
+use Swd\CoreBundle\Services\CommonService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swd\CoreBundle\Services\DateService;
@@ -48,11 +49,29 @@ class UserController extends Controller
 		if ($form->isSubmitted() && $form->isValid())
 		{
 			$user = $form->getData();
+
+			if (strlen( $user->getPassword() ) > 0 )
+			{
+				$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+				$encoded = $encoder->encodePassword( $user->getPassword(), "" );
+				$user->setPassword($encoded);
+			}
+			else
+			{
+				$user->setPassword( null );
+			}
+
+			//CommonService::debug($user->getPassword()); exit;
+
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($user);
+			$em->flush();
 		}
 
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(
 			'form' => $form->createView(),
-			'id' => $id
+			'id' => $id,
+			'readonly' => ( $id > 0 ) ? true : false
 		));
 	}
 

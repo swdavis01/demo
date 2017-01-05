@@ -28,9 +28,15 @@
                     buttonCount: 5
                 },
                 columns: [{
+                    field: "name",
+                    title: "Name",
+                    width: 160,
+
+                },
+                {
                     field: "username",
-                    title: "User",
-                    width: 240,
+                    title: "Username",
+                    width: 200,
 
                 },
                 {
@@ -51,6 +57,8 @@
             var url = $('#swd_admin_user').html();
             url = url.replace("id", item.id);
             console.log(url);
+            window.location.href = url;
+            return;
 
             var form = $("#swd_admin_user_form")
 

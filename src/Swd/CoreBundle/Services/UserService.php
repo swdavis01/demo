@@ -4,6 +4,7 @@ namespace Swd\CoreBundle\Services;
 
 use Swd\CoreBundle\Entity\User;
 use Swd\CoreBundle\Services\CommonService;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserService extends BaseService
 {
@@ -37,10 +38,11 @@ class UserService extends BaseService
 		try {
 			$user = $query->getSingleResult();
 		} catch ( \Doctrine\ORM\ORMException $e ) {
-			var_dump($e); exit;
+			throw new UsernameNotFoundException( "Unable to find user ", 0 );
 		}
 
-		//CommonService::debug( $user ); exit;
+		//$user->debug(); exit;
+		//CommonService::debug( $user->getRoles() ); exit;
 		return $user;
 	}
 
@@ -65,9 +67,10 @@ class UserService extends BaseService
 		try {
 			$user = $query->getSingleResult();
 		} catch ( \Doctrine\ORM\ORMException $e ) {
-			var_dump($e); exit;
+			throw new UsernameNotFoundException( "Unable to find user", 0 );
 		}
 
+		//$user->debug(); exit;
 		return $user;
 	}
 

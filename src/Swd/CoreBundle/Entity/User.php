@@ -26,7 +26,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=64, nullable=false)
+     * @ORM\Column(name="password", type="string", length=64, nullable=true)
      */
     private $password = '';
 
@@ -41,6 +41,14 @@ class User implements AdvancedUserInterface, \Serializable
 	 * )
      */
     private $username;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="name", type="string", length=255, nullable=false)
+	 * @Assert\NotBlank()
+	 */
+	private $name;
 
     /**
      * @var \DateTime
@@ -113,29 +121,53 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->password;
     }
 
-    /**
-     * Set username
-     *
-     * @param string $username
-     *
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
+	/**
+	 * Set username
+	 *
+	 * @param string $username
+	 *
+	 * @return User
+	 */
+	public function setUsername($username)
+	{
+		$this->username = $username;
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Get username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
+	/**
+	 * Get username
+	 *
+	 * @return string
+	 */
+	public function getUsername()
+	{
+		return $this->username;
+	}
+
+	/**
+	 * Set name
+	 *
+	 * @param string $name
+	 *
+	 * @return User
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Get name
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
 
     /**
      * Set created
@@ -229,6 +261,8 @@ class User implements AdvancedUserInterface, \Serializable
 	{
 		$this->isActive = true;
 		$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->created = new \DateTime();
+		$this->updated = new \DateTime();
 	}
 
 	/** @see \Serializable::serialize() */
@@ -305,5 +339,11 @@ class User implements AdvancedUserInterface, \Serializable
 	public function isEnabled()
 	{
 		return $this->isActive;
+	}
+
+	public function debug()
+	{
+		CommonService::debug( $this->getUsername() );
+		CommonService::debug( $this->getRoles() );
 	}
 }
