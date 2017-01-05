@@ -21,6 +21,7 @@ class UserType extends AbstractType
 
 		$builder
 			->add( 'id', HiddenType::class)
+			->add( 'name', TextType::class, array( 'label' => 'Name', 'required' => true, 'attr' => array( 'placeholder' => 'name', 'novalidate' => 'novalidate' ) ) )
 			->add( 'username', TextType::class, array( 'label' => 'Username (Email)', 'required' => true, 'attr' => array( 'placeholder' => 'username', 'novalidate' => 'novalidate' ) ) )
 			->add( 'save', SubmitType::class );
 

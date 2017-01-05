@@ -21,6 +21,7 @@
             </div>
             <div class="body">
                 {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
+                {{ form_row(form.name) }}
                 {% if (readonly == false) %}
                     {{ form_row(form.password) }}
                 {% endif %}

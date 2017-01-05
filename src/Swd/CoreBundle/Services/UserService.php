@@ -93,7 +93,7 @@ class UserService extends BaseService
 				u, r
     		FROM 
     			CoreBundle:User u
-    			JOIN u.roles r 
+    			LEFT JOIN u.roles r 
     		WHERE 
     			u.username != :username
     		ORDER BY 
