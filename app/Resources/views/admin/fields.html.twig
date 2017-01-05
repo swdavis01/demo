@@ -1,0 +1,13 @@
+{% block form_row %}
+    <div class="form_row">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form, {'attr': {'class': 'form-control'}}) }}
+    </div>
+{% endblock form_row %}
+
+{% block text_widget %}
+    <div class="text_widget">
+        {{ block('form_widget_simple') }}
+    </div>
+{% endblock %}

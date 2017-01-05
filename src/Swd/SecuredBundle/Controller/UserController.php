@@ -29,7 +29,18 @@ class UserController extends Controller
 	{
 		$this->denyAccessUnlessGranted(UserVoter::EDIT);
 
-		$user = new User();
+		if ( $id > 0 )
+		{
+			$user = $this->get( 'swd_core_user_service' )->getUserById( $id );
+			if ( !is_object( $user ) )
+			{
+				throw new UsernameNotFoundException( "Unable to find user " . $id, 0 );
+			}
+		}
+		else
+		{
+			$user = new User();
+		}
 		$form = $this->createForm(UserType::class, $user);
 
 		$form->handleRequest($request);

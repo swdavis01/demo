@@ -36,7 +36,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="username", type="string", length=255, nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Email(
-	 *     message = "The username '{{ value }}' is not a valid email address",
+	 *     message = "not a valid email address",
 	 *     checkMX = true
 	 * )
      */
@@ -204,6 +204,20 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return $this->id;
     }
+
+	/**
+	 * Set id
+	 *
+	 * @param int $id
+	 *
+	 * @return User
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+
+		return $this;
+	}
 
 	/**
 	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="user")
