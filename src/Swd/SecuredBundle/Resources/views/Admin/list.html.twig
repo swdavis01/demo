@@ -18,20 +18,23 @@
                             dataType: "jsonp"
                         }
                     },
-                    pageSize: 20
+                    //pageSize: 20
                 },
                 height: 550,
-                sortable: true,
+                /*sortable: true,
                 pageable: {
                     refresh: true,
                     pageSizes: false,
                     buttonCount: 5
+                },*/
+                columns: [
+                {
+                    command: { name: "userGridEditCommand", text: "", className: "glyphicon glyphicon-edit", click: userGridEdit }, title: " ", width: "60px"
                 },
-                columns: [{
+                {
                     field: "name",
                     title: "Name",
                     width: 160,
-
                 },
                 {
                     field: "username",
@@ -49,9 +52,24 @@
                     field: "createdDateTime",
                     title: "Created",
                     template: "#= kendo.toString(kendo.parseDate(createdDateTime), '{{ dateTimeFormat }}') #"
-                }]
+                }
+                ]
             });
         });
+
+        function userGridEdit(e) {
+            e.preventDefault();
+
+            var item = this.dataItem($(e.currentTarget).closest("tr"));
+            //wnd.content(detailsTemplate(dataItem));
+            //wnd.center().open();
+
+            var url = $('#swd_admin_user').html();
+            url = url.replace("id", item.id);
+            console.log(url);
+            window.location.href = url;
+        }
+
         $("#userGrid").delegate("tbody>tr", "dblclick", function(){
             var item = $("#userGrid").data("kendoGrid").dataItem($(this))
             var url = $('#swd_admin_user').html();
