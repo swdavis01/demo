@@ -25,6 +25,7 @@
                 {% if (readonly == false) %}
                     {{ form_row(form.password) }}
                 {% endif %}
+                {{ form_row(form.roles) }}
                 {{ form_row(form.save) }}
                 {{ form_row(form._token) }}
             </div>

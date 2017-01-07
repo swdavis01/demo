@@ -18,3 +18,8 @@ services:
             - { name: security.voter }
         # small performance boost
         public: false
+    swd_security_user_type:
+        class: Swd\SecuredBundle\Forms\UserType
+        arguments: ['@service_container']
+        tags:
+            - { name: form.type }

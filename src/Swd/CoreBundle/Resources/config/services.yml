@@ -2,3 +2,7 @@ services:
     swd_core_user_service:
         class: Swd\CoreBundle\Services\UserService
         arguments: ["@doctrine.orm.entity_manager"]
+
+    swd_core_role_service:
+        class: Swd\CoreBundle\Services\RoleService
+        arguments: ["@doctrine.orm.entity_manager"]

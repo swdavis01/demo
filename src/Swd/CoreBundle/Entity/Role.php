@@ -28,6 +28,13 @@ class Role
      */
     private $id;
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="section", type="string", length=255, nullable=true)
+	 */
+	private $section;
+
     /**
      * Set name
      *

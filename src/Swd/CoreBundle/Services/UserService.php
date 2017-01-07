@@ -75,8 +75,8 @@ class UserService extends BaseService
 	}
 
 	/**
-	 * @param $id
-	 * @return User
+	 * @param $params array
+	 * @return array
 	 */
 	public function getUsers( $params = array() )
 	{
