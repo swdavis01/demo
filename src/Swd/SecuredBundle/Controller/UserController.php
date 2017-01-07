@@ -48,24 +48,7 @@ class UserController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid())
 		{
-			$user = $form->getData();
-
-			if (strlen( $user->getPassword() ) > 0 )
-			{
-				$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-				$encoded = $encoder->encodePassword( $user->getPassword(), "" );
-				$user->setPassword($encoded);
-			}
-			else
-			{
-				$user->setPassword( null );
-			}
-
-			//CommonService::debug($user->getPassword()); exit;
-
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($user);
-			$em->flush();
+			$this->get( 'swd_core_user_service' )->save( $form->getData() );
 		}
 
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(

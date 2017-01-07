@@ -30,9 +30,10 @@ class UserType extends AbstractType
 
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
+		$user = $options['data'];
 		//$default = new User();
-		$roles = $this->container->get( 'swd_core_role_service' )->getRoles();
-		//CommonService::debug( $roles ); exit;
+		$roles = $this->container->get( 'swd_core_role_service' )->getUserRoles( $user->getId() );
+		//CommonService::debug( $user ); exit;
 
 		$builder
 			->add( 'id', HiddenType::class)
@@ -40,31 +41,34 @@ class UserType extends AbstractType
 			->add( 'username', TextType::class, array( 'label' => 'Username (Email)', 'required' => true, 'attr' => array( 'placeholder' => 'username', 'novalidate' => 'novalidate' ) ) )
 			->add( 'save', SubmitType::class );
 
-		$builder->add('password', RepeatedType::class, array(
-			'type' => PasswordType::class,
-			'invalid_message' => 'The password fields must match',
-			'options' => array('attr' => array('class' => 'password-field')),
-			'required' => false,
-			'first_options'  => array('label' => 'Password'),
-			'second_options' => array('label' => 'Repeat Password'),
-		));
+		if ( $user->getId() == 0 || strlen( $user->getPassword() ) == 0 )
+		{
+			$builder->add('password', RepeatedType::class, array(
+				'type' => PasswordType::class,
+				'invalid_message' => 'The password fields must match',
+				'options' => array('attr' => array('class' => 'password-field')),
+				'required' => false,
+				'first_options'  => array('label' => 'Password'),
+				'second_options' => array('label' => 'Repeat Password'),
+			));
+		}
+		else
+		{
+			$builder->add( 'password', HiddenType::class);
+		}
 
-		$builder->add('roles', ChoiceType::class, [
+		$builder->add('userRoles', ChoiceType::class, [
 			'choices' => [$roles],
 			'multiple' => true,
-			'choice_label' => function($role, $key, $index) {
-				/** @var Role $role */
-				return strtoupper($role->getName());
+			'choice_label' => function($userRole, $key, $index) {
+				/** @var UserRole $userRole */
+				return strtoupper($userRole->getRole()->getName());
 			},
-			'choice_attr' => function($role, $key, $index) {
-				return ['class' => 'category_'.strtolower($role->getName())];
+			'choice_attr' => function($userRole, $key, $index) {
+				return ['class' => 'role_'.strtolower($userRole->getRole()->getName())];
 			},
-			'group_by' => function($role, $key, $index) {
-				// randomly assign things into 2 groups
-				return rand(0, 1) == 1 ? 'Group A' : 'Group B';
-			},
-			'preferred_choices' => function($role, $key, $index) {
-				return $role->getName() == 'Cat2' || $role->getName() == 'Cat3';
+			'group_by' => function($userRole, $key, $index) {
+				return $userRole->getRole()->getSection();
 			},
 		]);
 

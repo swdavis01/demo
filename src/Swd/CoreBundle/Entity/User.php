@@ -252,15 +252,14 @@ class User implements AdvancedUserInterface, \Serializable
 	}
 
 	/**
-	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="user")
+	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="user", cascade={"persist", "remove"})
 	 */
-	protected $roles;
-
+	protected $userRoles;
 
 	public function __construct()
 	{
 		$this->isActive = true;
-		$this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->created = new \DateTime();
 		$this->updated = new \DateTime();
 	}
@@ -307,21 +306,30 @@ class User implements AdvancedUserInterface, \Serializable
 		return null;
 	}
 
-	public function setRoles( $roles )
+	public function setUserRoles( $userRoles )
 	{
-		$this->roles = $roles;
+		$this->userRoles = $userRoles;
 	}
 
-	public function getObjectRoles() {
-		return $this->roles;
+	public function getUserRoles() {
+		$result = array();
+
+		foreach( $this->userRoles as $role )
+		{
+			$result[] = $role;
+			//echo $role->getUserId() . "<br />";
+		}
+
+		return $result;
+		//return $this->userRoles;
 	}
 
 	public function getRoles()
 	{
 		$roles = array();
-		foreach( $this->roles as $role )
+		foreach( $this->userRoles as $role )
 		{
-			$roles[] = $role->getRole()->getName();
+			$roles[] = 'ROLE_' . $role->getRole()->getName();
 		}
 		//CommonService::debug( $roles ); exit;
 		return $roles;
@@ -329,7 +337,7 @@ class User implements AdvancedUserInterface, \Serializable
 
 	public function getRolesString()
 	{
-		return implode( ", ", $this->getRoles() );
+		return implode( ", ", str_replace( 'ROLE_', '', $this->getRoles() ) );
 	}
 
 	public function eraseCredentials()
@@ -346,4 +354,29 @@ class User implements AdvancedUserInterface, \Serializable
 		CommonService::debug( $this->getUsername() );
 		CommonService::debug( $this->getRoles() );
 	}
+
+    /**
+     * Add user role
+     *
+     * @param \Swd\CoreBundle\Entity\UserRole $userRole
+     *
+     * @return User
+     */
+    public function addUserRole(\Swd\CoreBundle\Entity\UserRole $userRole)
+    {
+        $this->userRoles[] = $userRole;
+		$userRole->setUser($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove user role
+     *
+     * @param \Swd\CoreBundle\Entity\UserRole $userRole
+     */
+    public function removeUserRole(\Swd\CoreBundle\Entity\UserRole $userRole)
+    {
+        $this->userRoles->removeElement($userRole);
+    }
 }

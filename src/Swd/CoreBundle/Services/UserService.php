@@ -4,17 +4,25 @@ namespace Swd\CoreBundle\Services;
 
 use Swd\CoreBundle\Entity\User;
 use Swd\CoreBundle\Services\CommonService;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\RuntimeException;
 
 class UserService extends BaseService
 {
 	/**
+	 * @var EncoderFactoryInterface
+	 */
+	private $encoderFactory;
+
+	/**
 	 * UserService constructor.
 	 * @param \Doctrine\ORM\EntityManager $em
 	 */
-	public function __construct( \Doctrine\ORM\EntityManager $em )
+	public function __construct( \Doctrine\ORM\EntityManager $em, EncoderFactoryInterface $encoderFactory )
 	{
 		parent::__construct( $em );
+		$this->encoderFactory = $encoderFactory;
 	}
 
 	/**
@@ -28,7 +36,7 @@ class UserService extends BaseService
 				u, r
     		FROM 
     			CoreBundle:User u
-    			JOIN u.roles r 	
+    			JOIN u.userRoles r 	
     		WHERE 
     			u.username = :username'
 		)->setParameter('username', $username);
@@ -57,7 +65,7 @@ class UserService extends BaseService
 				u, r
     		FROM 
     			CoreBundle:User u
-    			JOIN u.roles r 	
+    			JOIN u.userRoles r 	
     		WHERE 
     			u.id = :id'
 		)->setParameter('id', $id);
@@ -90,10 +98,9 @@ class UserService extends BaseService
 
 		$query = $this->em->createQuery(
 			'SELECT 
-				u, r
+				u
     		FROM 
     			CoreBundle:User u
-    			LEFT JOIN u.roles r 
     		WHERE 
     			u.username != :username
     		ORDER BY 
@@ -104,5 +111,48 @@ class UserService extends BaseService
 		$result = $query->getResult();
 
 		return $result;
+	}
+
+	private function deleteRoles( $user_id )
+	{
+		$query = $this->em->createQuery(
+			'DELETE 
+    		FROM 
+    			CoreBundle:UserRole ur
+    		WHERE 
+    			ur.userId = :user_id'
+		)->setParameter('user_id', (int)$user_id);
+
+		//CommonService::debug($query); exit;
+
+		try {
+			$result = $query->execute();
+		} catch ( \Doctrine\ORM\ORMException $e ) {
+			CommonService::debug($e); exit;
+			//throw new RuntimeException( "Error deleting user groups for user_id", 0 );
+		}
+
+		//$user->debug(); exit;
+		return $result;
+
+	}
+
+	public function save( User $user )
+	{
+		if (strlen( $user->getPassword() ) > 0 )
+		{
+			$encoder = $this->encoderFactory->getEncoder($user);
+			$encoded = $encoder->encodePassword( $user->getPassword(), "" );
+			$user->setPassword($encoded);
+		}
+
+		$this->deleteRoles( $user->getId() );
+		/*foreach($user->getUserRoles() as $userRole)
+		{
+			echo $userRole->getUserId() . ", " . $userRole->getRoleId() . "<br />";
+		}*/
+
+		$this->em->persist($user);
+		$this->em->flush();
 	}
 }

@@ -7,7 +7,7 @@ class CommonService
 	public static function debug( $object )
 	{
 		echo "<pre>";
-			print_r( $object );
+			var_dump( $object );
 		echo "</pre>";
 	}
 }

@@ -106,12 +106,34 @@ class UserRole
     }
 
 	/**
-	 * Get roleId
+	 * Get role
 	 *
 	 * @return Swd\CoreBundle\Entity\Role
 	 */
 	public function getRole()
 	{
 		return $this->role;
+	}
+
+	/**
+	 * @param $role
+	 * @return $this
+	 */
+	public function setRole($role)
+	{
+		$this->role = $role;
+
+		return $this;
+	}
+
+	/**
+	 * @param $user
+	 * @return $this
+	 */
+	public function setUser($user)
+	{
+		$this->user = $user;
+
+		return $this;
 	}
 }
