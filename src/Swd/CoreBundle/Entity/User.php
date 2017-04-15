@@ -314,10 +314,17 @@ class User implements AdvancedUserInterface, \Serializable
 	public function getUserRoles() {
 		$result = array();
 
-		foreach( $this->userRoles as $role )
+		foreach( $this->userRoles as $userRole )
 		{
-			$result[] = $role;
-			//echo $role->getUserId() . "<br />";
+			$result[] = $userRole;
+			//echo $userRole->getUserId() . "_" . $userRole->getRoleId() . "_" . $userRole->getRole()->getName() . "<br />";
+
+			/*$userRole = new UserRole();
+			$userRole->setUserId( $userRole->getUserId() );
+			$userRole->setRoleId( $userRole->getRoleId() );
+			$userRole->setRole( $userRole->getRole() );
+
+			$result[] = $userRole;*/
 		}
 
 		return $result;

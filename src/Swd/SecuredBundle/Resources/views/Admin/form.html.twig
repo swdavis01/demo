@@ -2,6 +2,8 @@
 
 {% extends 'AdminBundle:default:index.html.twig' %}
 
+{% import 'admin/fields.html.twig' as fields %}
+
 {% form_theme form 'admin/fields.html.twig' %}
 
 {% block menu_swd_admin_user %}active{% endblock %}
@@ -24,6 +26,7 @@
                 {{ form_row(form.name) }}
                 {{ form_row(form.password) }}
                 {{ form_row(form.userRoles) }}
+                {{ fields.displayUserRoles(userRoles) }}
                 {{ form_row(form.save) }}
                 {{ form_row(form.id) }}
                 {{ form_row(form._token) }}

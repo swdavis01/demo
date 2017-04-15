@@ -11,3 +11,19 @@
         {{ block('form_widget_simple') }}
     </div>
 {% endblock %}
+
+{% macro displayUserRoles(items) %}
+    {% import _self as fields %}
+
+    {% if items|length %}
+        <table>
+        {% for item in items %}
+            <tr>
+                <td>
+                    {{ item.roleId }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+{% endmacro %}

@@ -33,7 +33,9 @@ class UserType extends AbstractType
 		$user = $options['data'];
 		//$default = new User();
 		$roles = $this->container->get( 'swd_core_role_service' )->getUserRoles( $user->getId() );
-		//CommonService::debug( $user ); exit;
+		//$userRoles = $this->container->get( 'swd_core_role_service' )->getUserRolesByUserId( $user->getId() );
+		//CommonService::debug( $roles ); exit;
+		//CommonService::debug( $userRoles ); exit;
 
 		$builder
 			->add( 'id', HiddenType::class)
@@ -58,8 +60,10 @@ class UserType extends AbstractType
 		}
 
 		$builder->add('userRoles', ChoiceType::class, [
-			'choices' => [$roles],
+			'choices' => $roles,
+			'expanded' => true,
 			'multiple' => true,
+			'data' => array(),
 			'choice_label' => function($userRole, $key, $index) {
 				/** @var UserRole $userRole */
 				return strtoupper($userRole->getRole()->getName());

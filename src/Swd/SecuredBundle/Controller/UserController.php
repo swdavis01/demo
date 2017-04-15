@@ -43,6 +43,7 @@ class UserController extends Controller
 			$user = new User();
 		}
 		$form = $this->createForm(UserType::class, $user);
+		//var_dump($user->getUserRoles()); exit;
 
 		$form->handleRequest($request);
 
@@ -54,6 +55,7 @@ class UserController extends Controller
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(
 			'form' => $form->createView(),
 			'id' => $id,
+			'userRoles' => $user->getUserRoles(),
 			'readonly' => ( $id > 0 ) ? true : false
 		));
 	}

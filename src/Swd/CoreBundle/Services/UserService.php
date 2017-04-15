@@ -2,8 +2,11 @@
 
 namespace Swd\CoreBundle\Services;
 
+use Swd\CoreBundle\Entity\Role;
 use Swd\CoreBundle\Entity\User;
+use Swd\CoreBundle\Entity\UserRole;
 use Swd\CoreBundle\Services\CommonService;
+use Swd\CoreBundle\Database\Database;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
@@ -19,9 +22,9 @@ class UserService extends BaseService
 	 * UserService constructor.
 	 * @param \Doctrine\ORM\EntityManager $em
 	 */
-	public function __construct( \Doctrine\ORM\EntityManager $em, EncoderFactoryInterface $encoderFactory )
+	public function __construct( \Doctrine\ORM\EntityManager $em, EncoderFactoryInterface $encoderFactory, Database $db )
 	{
-		parent::__construct( $em );
+		parent::__construct( $em, $db );
 		$this->encoderFactory = $encoderFactory;
 	}
 
@@ -60,7 +63,7 @@ class UserService extends BaseService
 	 */
 	public function getUserById( $id )
 	{
-		$query = $this->em->createQuery(
+		/*$query = $this->em->createQuery(
 			'SELECT 
 				u, r
     		FROM 
@@ -76,9 +79,44 @@ class UserService extends BaseService
 			$user = $query->getSingleResult();
 		} catch ( \Doctrine\ORM\ORMException $e ) {
 			throw new UsernameNotFoundException( "Unable to find user", 0 );
+		}*/
+
+		$sql = 'SELECT 
+				u.*,
+				r.id AS role_id,
+				r.name AS rowName,
+				r.section AS rowSection,
+				r.priority AS rowPriority
+    		FROM 
+    			user u
+    			INNER JOIN user_role ur ON (u.id = ur.user_id)
+    			INNER JOIN role r ON (r.id = ur.role_id)
+    		WHERE 
+    			u.id = :id';
+		$result = $this->db->fetchAll( $sql, array( ':id' => $id ) );
+		$user = new User();
+		foreach( $result as $row )
+		{
+			$user->setId( $row['id'] );
+			$user->setUsername( $row['username'] );
+			$user->setName( $row['name'] );
+			$user->setPassword( $row['password'] );
+			$user->setCreated( $row['created'] );
+			$user->setUpdated( $row['updated'] );
+
+			$role = new Role();
+			$role->setName( $row['rowName'] );
+			$role->setSection( $row['rowSection'] );
+			$role->setPriority( $row['rowPriority'] );
+
+			$userRole = new UserRole();
+			$userRole->setRoleId( $row['role_id'] );
+			$userRole->setUserId( $row['id'] );
+			$userRole->setRole( $role );
+
+			$user->addUserRole( $userRole );
 		}
 
-		//$user->debug(); exit;
 		return $user;
 	}
 

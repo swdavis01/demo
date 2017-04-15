@@ -1,8 +1,13 @@
 services:
+
+    swd_core_db:
+        class: Swd\CoreBundle\Database\Database
+        arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%"]
+
     swd_core_user_service:
         class: Swd\CoreBundle\Services\UserService
-        arguments: ["@doctrine.orm.entity_manager", "@security.encoder_factory"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.encoder_factory", "@swd_core_db"]
 
     swd_core_role_service:
         class: Swd\CoreBundle\Services\RoleService
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@swd_core_db"]
