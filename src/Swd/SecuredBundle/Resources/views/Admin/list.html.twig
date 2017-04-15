@@ -52,7 +52,13 @@
                     field: "createdDateTime",
                     title: "Created",
                     template: "#= kendo.toString(kendo.parseDate(createdDateTime), '{{ dateTimeFormat }}') #"
-                }
+                },
+                {
+                    type: "datetime",
+                    field: "updatedDateTime",
+                    title: "Updated",
+                    template: "#= kendo.toString(kendo.parseDate(updatedDateTime), '{{ dateTimeFormat }}') #"
+                 }
                 ]
             });
         });

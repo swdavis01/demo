@@ -15,8 +15,17 @@ class DateService
 		return $date->format( self::DATE_TIME_FORMAT );
 	}
 
-	public static function getDateTime( \DateTime $date )
+	public static function getDateTime( string $date )
 	{
+		$date = new \DateTime( $date );
+
+		return $date->format( self::DATE_TIME );
+	}
+
+	public static function getCurrentDateTimeString()
+	{
+		$date = new \DateTime();
+
 		return $date->format( self::DATE_TIME );
 	}
 }

@@ -227,6 +227,16 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->updated;
     }
 
+	/**
+	 * Get updated
+	 *
+	 * @return string
+	 */
+	public function getUpdatedDateTime()
+	{
+		return DateService::getDateTime( $this->updated );
+	}
+
     /**
      * Get id
      *

@@ -8,8 +8,6 @@ use Swd\CoreBundle\Entity\UserRole;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Database\Database;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\RuntimeException;
 
 class UserService extends BaseService
 {
@@ -34,27 +32,19 @@ class UserService extends BaseService
 	 */
 	public function getUserByUsername( $username )
 	{
-		$query = $this->em->createQuery(
-			'SELECT 
-				u, r
-    		FROM 
-    			CoreBundle:User u
-    			JOIN u.userRoles r 	
-    		WHERE 
-    			u.username = :username'
-		)->setParameter('username', $username);
+		$params = array
+		(
+			'placeholders' => array( ':username' => $username ),
+			'where' => 'u.username = :username'
+		);
 
-		//CommonService::debug( $username ); exit;
-
-		try {
-			$user = $query->getSingleResult();
-		} catch ( \Doctrine\ORM\ORMException $e ) {
-			throw new UsernameNotFoundException( "Unable to find user ", 0 );
+		$result = $this->get( $params );
+		if ( count( $result ) > 0 )
+		{
+			return $result[0];
 		}
 
-		//$user->debug(); exit;
-		//CommonService::debug( $user->getRoles() ); exit;
-		return $user;
+		return null;
 	}
 
 	/**
@@ -63,25 +53,51 @@ class UserService extends BaseService
 	 */
 	public function getUserById( $id )
 	{
-		/*$query = $this->em->createQuery(
-			'SELECT 
-				u, r
-    		FROM 
-    			CoreBundle:User u
-    			JOIN u.userRoles r 	
-    		WHERE 
-    			u.id = :id'
-		)->setParameter('id', $id);
+		$params = array
+		(
+			'placeholders' => array( ':id' => $id ),
+			'where' => 'u.id = :id'
+		);
 
-		//CommonService::debug( $id ); exit;
+		$result = $this->get( $params );
+		if ( count( $result ) > 0 )
+		{
+			return $result[0];
+		}
 
-		try {
-			$user = $query->getSingleResult();
-		} catch ( \Doctrine\ORM\ORMException $e ) {
-			throw new UsernameNotFoundException( "Unable to find user", 0 );
-		}*/
+		return null;
+	}
 
-		$sql = 'SELECT 
+	/**
+	 * @param $params array
+	 * @return array
+	 */
+	public function getUsers( $params = array() )
+	{
+		$page = 1;
+		$username = "";
+
+		extract( $params );
+
+		$result = $this->get( $params );
+
+		return $result;
+	}
+
+	private function get( $params = array() )
+	{
+		$where = "1 = 1";
+		$placeholders = array();
+		$orderBy = "u.name";
+		$sortBy = "ASC";
+
+		extract( $params );
+
+		//CommonService::print_r($params);
+
+		$values = array();
+
+		$sql = "SELECT 
 				u.*,
 				r.id AS role_id,
 				r.name AS rowName,
@@ -89,20 +105,31 @@ class UserService extends BaseService
 				r.priority AS rowPriority
     		FROM 
     			user u
-    			INNER JOIN user_role ur ON (u.id = ur.user_id)
-    			INNER JOIN role r ON (r.id = ur.role_id)
+    			LEFT JOIN user_role ur ON (u.id = ur.user_id)
+    			LEFT JOIN role r ON (r.id = ur.role_id)
     		WHERE 
-    			u.id = :id';
-		$result = $this->db->fetchAll( $sql, array( ':id' => $id ) );
-		$user = new User();
+    			" . $where . " 
+    		ORDER BY 
+    			" . $orderBy . " " . $sortBy;
+		$result = $this->db->fetchAll( $sql, $placeholders );
 		foreach( $result as $row )
 		{
-			$user->setId( $row['id'] );
-			$user->setUsername( $row['username'] );
-			$user->setName( $row['name'] );
-			$user->setPassword( $row['password'] );
-			$user->setCreated( $row['created'] );
-			$user->setUpdated( $row['updated'] );
+			$id = $row['id'];
+
+			if ( isset( $values[ $id ] ) )
+			{
+				$user = $values[ $id ];
+			}
+			else
+			{
+				$user = new User();
+				$user->setId( $row['id'] );
+				$user->setUsername( $row['username'] );
+				$user->setName( $row['name'] );
+				$user->setPassword( $row['password'] );
+				$user->setCreated( $row['created'] );
+				$user->setUpdated( $row['updated'] );
+			}
 
 			$role = new Role();
 			$role->setName( $row['rowName'] );
@@ -115,82 +142,83 @@ class UserService extends BaseService
 			$userRole->setRole( $role );
 
 			$user->addUserRole( $userRole );
+
+			$values[$id] = $user;
 		}
 
-		return $user;
-	}
-
-	/**
-	 * @param $params array
-	 * @return array
-	 */
-	public function getUsers( $params = array() )
-	{
-		$page = 1;
-		$username = "asfsaf";
-
-		extract( $params );
-
-		//$result = $this->em->getRepository( 'CoreBundle:User' )->findAll();
-		//print_r($users); exit;
-
-		$query = $this->em->createQuery(
-			'SELECT 
-				u
-    		FROM 
-    			CoreBundle:User u
-    		WHERE 
-    			u.username != :username
-    		ORDER BY 
-    			u.username 
-    		ASC'
-		)->setParameter('username', $username);
-
-		$result = $query->getResult();
-
-		return $result;
+		return array_values( $values );
 	}
 
 	private function deleteRoles( $user_id )
 	{
-		$query = $this->em->createQuery(
+		$sql =
 			'DELETE 
     		FROM 
-    			CoreBundle:UserRole ur
+    			user_role
     		WHERE 
-    			ur.userId = :user_id'
-		)->setParameter('user_id', (int)$user_id);
+    			user_id = :user_id';
+		$this->db->execute( $sql, array( ':user_id' => $user_id ) );
+	}
 
-		//CommonService::debug($query); exit;
-
-		try {
-			$result = $query->execute();
-		} catch ( \Doctrine\ORM\ORMException $e ) {
-			CommonService::debug($e); exit;
-			//throw new RuntimeException( "Error deleting user groups for user_id", 0 );
-		}
-
-		//$user->debug(); exit;
-		return $result;
-
+	private function saveRole( $user_id, $role_id )
+	{
+		$sql =
+			'INSERT INTO 
+    			user_role
+    		SET 
+    			user_id = :user_id, 
+    			role_id = :role_id';
+		$this->db->execute( $sql, array( ':user_id' => $user_id, ':role_id' => $role_id ) );
 	}
 
 	public function save( User $user )
 	{
+		$sql = "
+			is_active = :is_active,
+			name = :name,
+			username = :username, 
+			updated = :updated
+		";
+
+		$placeholders = array
+		(
+			':is_active' => $user->getIsActive(),
+			':name' => $user->getName(),
+			':username' => $user->getUsername(),
+			':updated' => DateService::getCurrentDateTimeString()
+		);
+
 		if (strlen( $user->getPassword() ) > 0 )
 		{
 			$encoder = $this->encoderFactory->getEncoder($user);
 			$encoded = $encoder->encodePassword( $user->getPassword(), "" );
 			$user->setPassword($encoded);
+
+			$sql .= ",
+			password = :password";
+
+			$placeholders[':password'] = $user->getPassword();
 		}
 
 		$this->deleteRoles( $user->getId() );
-		/*foreach($user->getUserRoles() as $userRole)
-		{
-			echo $userRole->getUserId() . ", " . $userRole->getRoleId() . "<br />";
-		}*/
 
-		$this->em->persist($user);
-		$this->em->flush();
+		if ( $user->getId() > 0 )
+		{
+			$sql = " UPDATE user SET " . $sql . " WHERE id = :id";
+			$placeholders[':id'] = $user->getId();
+			$this->db->execute( $sql, $placeholders );
+		}
+		else
+		{
+			$placeholders[':created'] = DateService::getCurrentDateTimeString();
+			$sql = "INSERT INTO user SET " . $sql;
+			$this->db->execute( $sql, $placeholders );
+			$user->setId( $this->db->lastInsertId() );
+		}
+
+		foreach( $user->getUserRoles() as $userRole )
+		{
+			$this->saveRole( $user->getId(), $userRole->getRoleId() );
+		}
 	}
 }

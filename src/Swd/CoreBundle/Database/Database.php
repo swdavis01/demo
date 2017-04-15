@@ -24,8 +24,6 @@ class Database
 
 	private function prepare($sql)
 	{
-		//SELECT u.*, r.* FROM user u INNER JOIN user_rolesz ur ON (u.user_id = ur.user_id) INNER JOIN roles r ON (r.role_id = ur.role_id) WHERE u.id = 1
-		//CommonService::debug($sql);
 		try
 		{
 			$st = $this->connection->prepare($sql);
@@ -39,16 +37,16 @@ class Database
 		return $st;
 	}
 
-	public function execute($sql, $params)
+	public function execute( $sql, $placeholders )
 	{
-		$st = $this->prepare($sql);
+		$st = $this->prepare( $sql );
 		try
 		{
-			$st->execute($params);
+			$st->execute( $placeholders );
 		}
-		catch (PDOException $ex)
+		catch ( PDOException $ex )
 		{
-			CommonService::debug($ex->getMessage());
+			CommonService::debug( $ex->getMessage() );
 			exit;
 		}
 		return $st;
