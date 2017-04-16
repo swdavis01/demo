@@ -15,6 +15,12 @@ class DateService
 		return $date->format( self::DATE_TIME_FORMAT );
 	}
 
+	public static function formatDateTimeString( string $date )
+	{
+		$date = new \DateTime( $date );
+		return self::formatDateTime( $date );
+	}
+
 	public static function getDateTime( string $date )
 	{
 		$date = new \DateTime( $date );

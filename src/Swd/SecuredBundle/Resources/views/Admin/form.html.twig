@@ -18,18 +18,48 @@
             <div>
                 {{ form_errors(form) }}
             </div>
+
+            <script type="text/javascript">
+                $(function () {
+                    $('#tabs').w2tabs({
+                        name: 'tabs',
+                        active: 'userTab',
+                        tabs: [
+                            { id: 'userTab', text: 'User' },
+                            { id: 'roleTab', text: 'Roles' }
+                        ],
+                        onClick: function (event) {
+                            console.log(event);
+                            console.log(event.tab.id);
+                            $('#userTab').css('display', 'none');
+                            $('#roleTab').css('display', 'none');
+                            $('#' + event.tab.id).css('display', 'block');
+                        }
+                    });
+                });
+            </script>
+
             <div class="header">
                 <h2>User Form</h2>
             </div>
             <div class="body">
-                {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
-                {{ form_row(form.name) }}
-                {{ form_row(form.password) }}
-                {{ form_row(form.userRoles) }}
-                {{ fields.displayUserRoles(userRoles) }}
-                {{ form_row(form.save) }}
+                <div id="tabs" style="width: 100%;"></div>
+                <div id="userTab" style="display: block;">
+                    {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.password) }}
+                </div>
+                <div id="roleTab" style="display: none;">
+                    {{ form_row(form.userRoles) }}
+                    {{ fields.displayUserRoles(userRoles) }}
+                </div>
+                {#{{ form_row(form.save) }}#}
                 {{ form_row(form.id) }}
                 {{ form_row(form._token) }}
+                <div class="w2ui-buttons">
+                    <button class="w2ui-btn" name="reset">Reset</button>
+                    <button class="w2ui-btn" name="save">Save</button>
+                </div>
             </div>
         </div>
     </form>

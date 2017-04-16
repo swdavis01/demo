@@ -7,110 +7,50 @@
 
 {% block body %}
 
-    <div id="userGrid"></div>
+    <div id="userGrid" style="width: 100%; height: 400px;"></div>
     <script>
-        $(document).ready(function () {
-            $("#userGrid").kendoGrid({
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: "{{ path('swd_admin_get_user_list') }}",
-                            dataType: "jsonp"
-                        }
-                    },
-                    //pageSize: 20
+        $(function () {
+            $('#userGrid').w2grid({
+                name: 'userGrid',
+                url: "{{ path('swd_admin_get_user_list') }}",
+                show: {
+                    toolbar: true,
+                    footer: true,
+                    selectColumn: true,
+                    toolbarDelete: true,
+                    toolbarAdd: true,
                 },
-                height: 550,
-                /*sortable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: false,
-                    buttonCount: 5
-                },*/
+                multiSearch: true,
+                searches: [
+                    { field: 'all', caption: 'All', type: 'text' }
+                ],
                 columns: [
-                {
-                    command: { name: "userGridEditCommand", text: "", className: "glyphicon glyphicon-edit", click: userGridEdit }, title: " ", width: "60px"
+                    { field: 'recid', caption: 'ID', size: '30px', sortable: true, attr: 'align="center"' },
+                    { field: 'name', caption: 'Name', size: '20%', sortable: true },
+                    { field: 'username', caption: 'Username', size: '30%', sortable: true },
+                    { field: 'rolesString', caption: 'Roles', size: '30%', sortable: true },
+//                    { field: 'createdDateTimeFormat', caption: 'Created', size: '10%', sortable: true },
+                    { field: 'updatedDateTimeFormat', caption: 'Updated', size: '10%', sortable: true }
+                ],
+                onAdd: function (event) {
+                    console.log(event);
+                    var url = $('#swd_admin_user').html();
+                    url = url.replace("id", 0);
+                    console.log(url);
+                    window.location.href = url;
                 },
-                {
-                    field: "name",
-                    title: "Name",
-                    width: 160,
+                onDelete: function (event) {
+                    //selected = w2ui.userGrid.getSelection();
+                    //console.log(selected);
                 },
-                {
-                    field: "username",
-                    title: "Username",
-                    width: 200,
-
-                },
-                {
-                    field: "rolesString",
-                    title: "Roles",
-                    width: 240,
-                },
-                {
-                    type: "datetime",
-                    field: "createdDateTime",
-                    title: "Created",
-                    template: "#= kendo.toString(kendo.parseDate(createdDateTime), '{{ dateTimeFormat }}') #"
-                },
-                {
-                    type: "datetime",
-                    field: "updatedDateTime",
-                    title: "Updated",
-                    template: "#= kendo.toString(kendo.parseDate(updatedDateTime), '{{ dateTimeFormat }}') #"
-                 }
-                ]
+                onDblClick: function(event) {
+                    console.log(event);
+                    var url = $('#swd_admin_user').html();
+                    url = url.replace("id", event.recid);
+                    console.log(url);
+                    window.location.href = url;
+                }
             });
-        });
-
-        function userGridEdit(e) {
-            e.preventDefault();
-
-            var item = this.dataItem($(e.currentTarget).closest("tr"));
-            //wnd.content(detailsTemplate(dataItem));
-            //wnd.center().open();
-
-            var url = $('#swd_admin_user').html();
-            url = url.replace("id", item.id);
-            console.log(url);
-            window.location.href = url;
-        }
-
-        $("#userGrid").delegate("tbody>tr", "dblclick", function(){
-            var item = $("#userGrid").data("kendoGrid").dataItem($(this))
-            var url = $('#swd_admin_user').html();
-            url = url.replace("id", item.id);
-            console.log(url);
-            window.location.href = url;
-            return;
-
-            var form = $("#swd_admin_user_form")
-
-            if (!form.data("kendoWindow"))
-            {
-                form.kendoWindow({
-                    content: url,
-                    title: "User Form",
-                    actions: ["Custom", "Pin", "Refresh", "Maximize", "Minimize", "Close"],
-                    draggable: false,
-                    height: "300px",
-                    modal: true,
-                    pinned: false,
-                    position: {
-                        top: 100,
-                        left: 100
-                    },
-                    resizable: false,
-                    width: "500px"
-                });
-            }
-
-            var formObject = form.data("kendoWindow");
-            formObject.refresh({
-                url: url
-            });
-            formObject.open().center();
-            formObject.maximize();
         });
     </script>
     <div id="swd_admin_user" style="display: none;">{{ path('swd_admin_user', {'id': 'id'}) }}</div>

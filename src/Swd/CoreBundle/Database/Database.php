@@ -79,4 +79,10 @@ class Database
 
 		return null;
 	}
+
+	public function lastInsertId()
+	{
+		return $this->connection->lastInsertId();
+	}
+
 }

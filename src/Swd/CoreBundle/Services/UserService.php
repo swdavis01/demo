@@ -74,24 +74,67 @@ class UserService extends BaseService
 	 */
 	public function getUsers( $params = array() )
 	{
-		$page = 1;
-		$username = "";
-
-		extract( $params );
-
 		$result = $this->get( $params );
 
 		return $result;
 	}
 
+	/**
+	 * @param $params array
+	 * @return array
+	 */
+	public function getUserList( $params = array() )
+	{
+		$values = array();
+		$result = $this->getUsers( $params );
+
+		foreach($result as $user)
+		{
+			$u = array
+			(
+				'id' => $user->getId(),
+				'name' => $user->getName(),
+				'username' => $user->getUsername(),
+				'rolesString' => $user->getRolesString(),
+				'createdDateTimeFormat' => $user->getCreatedDateTimeFormat(),
+				'updatedDateTimeFormat' => $user->getUpdatedDateTimeFormat()
+			);
+
+			$values[] = $u;
+		}
+
+		return $values;
+	}
+
 	private function get( $params = array() )
 	{
-		$where = "1 = 1";
+		$where = "";
 		$placeholders = array();
 		$orderBy = "u.name";
 		$sortBy = "ASC";
+		$search = "";
+		$is_active = 1;
 
-		extract( $params );
+		extract( $this->parseParams( "u.", $params ) );
+
+		$placeholders[':is_active'] = $is_active;
+
+		if ( strlen( $search ) > 0 )
+		{
+			$where .= " AND (u.name LIKE :search1 OR u.username LIKE :search2)";
+			$placeholders[':search1'] = "" . $search . "%";
+			$placeholders[':search2'] = "" . $search . "%";
+		}
+
+		if ( strlen( $where ) > 0 )
+		{
+			$where = " AND " . $where;
+		}
+
+		if ( strstr( $orderBy, "Format" ) )
+		{
+			$orderBy = "u." . str_replace("Format", "", $orderBy);
+		}
 
 		//CommonService::print_r($params);
 
@@ -99,6 +142,7 @@ class UserService extends BaseService
 
 		$sql = "SELECT 
 				u.*,
+				u.id AS recid,
 				r.id AS role_id,
 				r.name AS rowName,
 				r.section AS rowSection,
@@ -108,7 +152,7 @@ class UserService extends BaseService
     			LEFT JOIN user_role ur ON (u.id = ur.user_id)
     			LEFT JOIN role r ON (r.id = ur.role_id)
     		WHERE 
-    			" . $where . " 
+    			is_active = :is_active " . $where . " 
     		ORDER BY 
     			" . $orderBy . " " . $sortBy;
 		$result = $this->db->fetchAll( $sql, $placeholders );
@@ -211,7 +255,7 @@ class UserService extends BaseService
 		else
 		{
 			$placeholders[':created'] = DateService::getCurrentDateTimeString();
-			$sql = "INSERT INTO user SET " . $sql;
+			$sql = "INSERT INTO user SET " . $sql . ", created = :created";
 			$this->db->execute( $sql, $placeholders );
 			$user->setId( $this->db->lastInsertId() );
 		}
@@ -220,5 +264,28 @@ class UserService extends BaseService
 		{
 			$this->saveRole( $user->getId(), $userRole->getRoleId() );
 		}
+	}
+
+	public function deleteUsers( $idArray = array() )
+	{
+		if ( count( $idArray ) )
+		{
+			foreach( $idArray as $id )
+			{
+				$this->deleteUser( $id );
+			}
+		}
+	}
+
+	public function deleteUser( $id )
+	{
+		$sql =
+			'UPDATE 
+    			user
+    		SET
+    			is_active = :is_active
+    		WHERE 
+    			id = :id';
+		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0 ) );
 	}
 }

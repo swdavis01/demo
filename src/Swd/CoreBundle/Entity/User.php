@@ -203,6 +203,16 @@ class User implements AdvancedUserInterface, \Serializable
 		return DateService::getDateTime( $this->created );
 	}
 
+	/**
+	 * Get created
+	 *
+	 * @return string
+	 */
+	public function getCreatedDateTimeFormat()
+	{
+		return DateService::formatDateTimeString( $this->created );
+	}
+
     /**
      * Set updated
      *
@@ -237,6 +247,16 @@ class User implements AdvancedUserInterface, \Serializable
 		return DateService::getDateTime( $this->updated );
 	}
 
+	/**
+	 * Get updated
+	 *
+	 * @return string
+	 */
+	public function getUpdatedDateTimeFormat()
+	{
+		return DateService::formatDateTimeString( $this->updated );
+	}
+
     /**
      * Get id
      *
@@ -259,6 +279,16 @@ class User implements AdvancedUserInterface, \Serializable
 		$this->id = $id;
 
 		return $this;
+	}
+
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getRecid()
+	{
+		return $this->id;
 	}
 
 	/**
