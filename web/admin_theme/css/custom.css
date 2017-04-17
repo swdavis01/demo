@@ -1,0 +1,37 @@
+﻿.form_row {
+    max-width: 400px;
+}
+
+.k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+    min-width: 35px;
+    padding: 5px 5px 5px 5px;
+}
+
+.k-grid-userGridEditCommand {
+
+}
+
+.admin-btn {
+    width: 100px;
+}
+
+.form {
+    padding: 20px;
+}
+
+.tabs {
+    width: 100zz%;
+}
+
+.tab {
+    padding: 20px 0 30px 0;
+}
+
+.roleOn {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.roleOff {
+
+}
