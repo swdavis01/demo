@@ -42,23 +42,20 @@
             <div class="header">
                 <h2>User Form</h2>
             </div>
-            <div class="body">
-                <div id="tabs" style="width: 100%;"></div>
-                <div id="userTab" style="display: block;">
+            <div class="form">
+                <div id="tabs" class="tabs"></div>
+                <div id="userTab" class="tab" style="display: block;">
                     {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
                     {{ form_row(form.name) }}
                     {{ form_row(form.password) }}
                 </div>
-                <div id="roleTab" style="display: none;">
+                <div id="roleTab" class="tab" style="display: none;">
                     {{ fields.displayUserRoles(roles) }}
                 </div>
                 {#{{ form_row(form.save) }}#}
                 {{ form_row(form.id) }}
                 {{ form_row(form._token) }}
-                <div class="w2ui-buttons">
-                    <button class="w2ui-btn" name="reset">Reset</button>
-                    <button class="w2ui-btn" name="save">Save</button>
-                </div>
+                {{ fields.formButtons('user', btnClass, path('swd_admin_user_list')) }}
             </div>
         </div>
     </form>

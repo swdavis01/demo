@@ -148,7 +148,7 @@ class UserService extends BaseService
     			LEFT JOIN user_role ur ON (u.id = ur.user_id)
     			LEFT JOIN role r ON (r.id = ur.role_id)
     		WHERE 
-    			is_active = :is_active " . $where . " 
+    			u.is_active = :is_active " . $where . " 
     		ORDER BY 
     			" . $orderBy . " " . $sortBy;
 		$result = $this->db->fetchAll( $sql, $placeholders );
@@ -240,8 +240,6 @@ class UserService extends BaseService
 			$placeholders[':password'] = $user->getPassword();
 		}
 
-		$this->deleteRoles( $user->getId() );
-
 		if ( $user->getId() > 0 )
 		{
 			$sql = " UPDATE user SET " . $sql . " WHERE id = :id";
@@ -256,9 +254,13 @@ class UserService extends BaseService
 			$user->setId( $this->db->lastInsertId() );
 		}
 
-		foreach( $user->getUserRoleIds() as $roleId )
+		if ( count( $user->getUserRoleIds() ) > 0 )
 		{
-			$this->saveRole( $user->getId(), $roleId );
+			$this->deleteRoles( $user->getId() );
+			foreach( $user->getUserRoleIds() as $roleId )
+			{
+				$this->saveRole( $user->getId(), $roleId );
+			}
 		}
 	}
 
@@ -281,8 +283,8 @@ class UserService extends BaseService
     		SET
     			is_active = :is_active
     		WHERE 
-    			id = :id';
-		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0 ) );
+    			id = :id AND can_delete = :can_delete';
+		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0, ':can_delete' => 1 ) );
 	}
 
 	public function getRoleList( $user_id )

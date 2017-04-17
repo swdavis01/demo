@@ -8,7 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-		$userId = 2;
+		$userId = 1;
 		$user = $this->get( 'swd_core_user_service' )->getUserById( $userId );
 
 		if (!$user) {
@@ -17,14 +17,16 @@ class DefaultController extends Controller
 			);
 		}
 
-		$plainPassword = 'guest';
-		$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-		$encoded = $encoder->encodePassword($plainPassword, "");
+		$plainPassword = 'admin';
+		//$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+		//$encoded = $encoder->encodePassword($plainPassword, "");
 
-		$user->setPassword($encoded);
+		$user->setPassword($plainPassword);
 
-		$em = $this->getDoctrine()->getManager();
-		$em->flush();
+		$this->get( 'swd_core_user_service' )->save( $user );
+
+		//$em = $this->getDoctrine()->getManager();
+		//$em->flush();
 
 		$user->debug();
 		//echo "<pre>"; print_r( $user ); echo "</pre>";

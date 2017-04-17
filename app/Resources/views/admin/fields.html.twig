@@ -16,23 +16,42 @@
     {% import _self as fields %}
     {% if items|length %}
         {% for section in items %}
-            {{ section.name }}
-            <table>
-                <tr>
-                    {% for role in section.roles %}
-                        {% set checked = '' %}
-                        {% if role.set == 1 %}
-                            {% set checked = 'checked' %}
-                        {% endif %}
-                        <td>
-                            <input type="checkbox" name="userRoles[]" value="{{ role.id }}" {{ checked }} />
-                        </td>
-                        <td>
-                            {{ role.name }}
-                        </td>
-                    {% endfor %}
-                </tr>
-            </table>
+            <div style="clear: both; padding-top: 10px;">
+                <label class="required">
+                    {{ section.name }}
+                </label>
+            </div>
+            <div>
+                {% for role in section.roles %}
+                    {% set checked = '' %}
+                    {% set class = 'roleOff' %}
+                    {% if role.set == 1 %}
+                        {% set checked = 'checked' %}
+                        {% set class = 'roleOn' %}
+                    {% endif %}
+                    <div style="float: left; padding-left: 10px;" id="role_{{ role.id }}" class="{{ class }}">
+                        <input type="checkbox" name="userRoles[]" value="{{ role.id }}" {{ checked }} onclick="if (this.checked) { $('#role_{{ role.id }}').attr('class', 'roleOn'); } else { $('#role_{{ role.id }}').attr('class', 'roleOff'); } " />&nbsp;{{ role.name|lower }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endfor %}
     {% endif %}
+{% endmacro %}
+
+{% macro formButtons(id, btnClass, cancelLink) %}
+    {% import _self as fields %}
+    <div style="padding-top: 20px;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%;">
+                    <button type="button" class="{{ btnClass }}" name="cancel" onclick="document.location = '{{ cancelLink }}'">Cancel</button>
+                </td>
+                <td style=" width: 50%; text-align: right;">
+                    <button type="submit" class="{{ btnClass }}" style="display: inline-block; vertical-align: bottom; padding-right: 20px;" name="save">Save</button>
+                    <button type="submit" class="{{ btnClass }}" style="display: inline-block; vertical-align: top;" name="saveClose" onclick="$('#{{ id }}Save').val('saveClose');">Save / Close</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <input type="hidden" name="{{ id }}Save" id="{{ id }}Save" value="save" />
 {% endmacro %}

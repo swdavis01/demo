@@ -80,6 +80,9 @@ class UserController extends Controller
 			$u = $form->getData();
 			$u->setUserRoleIds( $request->request->get('userRoles') );
 			$this->get( 'swd_core_user_service' )->save( $u );
+
+			$command = $request->request->get('userSave');
+			echo "";
 		}
 
 		//CommonService::print_r($this->get( 'swd_core_user_service' )->getRoleList( $id )); exit;
