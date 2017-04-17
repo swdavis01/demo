@@ -14,16 +14,25 @@
 
 {% macro displayUserRoles(items) %}
     {% import _self as fields %}
-
     {% if items|length %}
-        <table>
-        {% for item in items %}
-            <tr>
-                <td>
-                    {{ item.roleId }}
-                </td>
-            </tr>
+        {% for section in items %}
+            {{ section.name }}
+            <table>
+                <tr>
+                    {% for role in section.roles %}
+                        {% set checked = '' %}
+                        {% if role.set == 1 %}
+                            {% set checked = 'checked' %}
+                        {% endif %}
+                        <td>
+                            <input type="checkbox" name="userRoles[]" value="{{ role.id }}" {{ checked }} />
+                        </td>
+                        <td>
+                            {{ role.name }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            </table>
         {% endfor %}
-        </table>
     {% endif %}
 {% endmacro %}

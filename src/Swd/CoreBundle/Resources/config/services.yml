@@ -6,8 +6,8 @@ services:
 
     swd_core_user_service:
         class: Swd\CoreBundle\Services\UserService
-        arguments: ["@doctrine.orm.entity_manager", "@security.encoder_factory", "@swd_core_db"]
+        arguments: ["@swd_core_db", "@security.encoder_factory"]
 
     swd_core_role_service:
         class: Swd\CoreBundle\Services\RoleService
-        arguments: ["@doctrine.orm.entity_manager", "@swd_core_db"]
+        arguments: ["@swd_core_db"]

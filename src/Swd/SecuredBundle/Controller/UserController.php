@@ -15,7 +15,7 @@ class UserController extends Controller
 {
 	public function listAction(Request $request)
 	{
-		echo "";
+		//echo "";
 		//CommonService::print_r($this->get( 'swd_core_user_service' )->getUserList()); exit;
 		return $this->render('SecuredBundle:Admin:list.html.twig', array(
 			'dateTimeFormat' => DateService::DATE_TIME_UI
@@ -77,13 +77,17 @@ class UserController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid())
 		{
-			$this->get( 'swd_core_user_service' )->save( $form->getData() );
+			$u = $form->getData();
+			$u->setUserRoleIds( $request->request->get('userRoles') );
+			$this->get( 'swd_core_user_service' )->save( $u );
 		}
+
+		//CommonService::print_r($this->get( 'swd_core_user_service' )->getRoleList( $id )); exit;
 
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(
 			'form' => $form->createView(),
 			'id' => $id,
-			'userRoles' => $user->getUserRoles(),
+			'roles' => $this->get( 'swd_core_user_service' )->getRoleList( $id ),
 			'readonly' => ( $id > 0 ) ? true : false
 		));
 	}

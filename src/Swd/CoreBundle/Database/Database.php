@@ -52,7 +52,7 @@ class Database
 		return $st;
 	}
 
-	public function fetchAll($sql, $params)
+	public function fetchAll($sql, $params = array())
 	{
 		$st = $this->execute($sql, $params);
 

@@ -2,48 +2,27 @@
 
 namespace Swd\CoreBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * UserRole
- *
- * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="role_id", columns={"role_id"}), @ORM\Index(name="user_role2", columns={"user_id", "role_id"})})
- * @ORM\Entity
  */
 class UserRole
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="user_id", type="bigint", nullable=false)
      */
     private $userId;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="role_id", type="bigint", nullable=false)
      */
     private $roleId;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="User")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 */
-	private $user;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="Role")
-	 * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
 	 */
 	private $role;
 
@@ -122,17 +101,6 @@ class UserRole
 	public function setRole($role)
 	{
 		$this->role = $role;
-
-		return $this;
-	}
-
-	/**
-	 * @param $user
-	 * @return $this
-	 */
-	public function setUser($user)
-	{
-		$this->user = $user;
 
 		return $this;
 	}

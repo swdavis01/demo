@@ -32,10 +32,7 @@ class UserType extends AbstractType
 	{
 		$user = $options['data'];
 		//$default = new User();
-		$roles = $this->container->get( 'swd_core_role_service' )->getUserRoles( $user->getId() );
-		//$userRoles = $this->container->get( 'swd_core_role_service' )->getUserRolesByUserId( $user->getId() );
-		//CommonService::debug( $roles ); exit;
-		//CommonService::debug( $userRoles ); exit;
+		//$roles = $this->container->get( 'swd_core_role_service' )->getUserRoles( $user->getId() );
 
 		$builder
 			->add( 'id', HiddenType::class)
@@ -59,13 +56,12 @@ class UserType extends AbstractType
 			$builder->add( 'password', HiddenType::class);
 		}
 
-		$builder->add('userRoles', ChoiceType::class, [
+		/*$builder->add('userRoles', ChoiceType::class, [
 			'choices' => $roles,
 			'expanded' => true,
 			'multiple' => true,
 			'data' => array(),
 			'choice_label' => function($userRole, $key, $index) {
-				/** @var UserRole $userRole */
 				return strtoupper($userRole->getRole()->getName());
 			},
 			'choice_attr' => function($userRole, $key, $index) {
@@ -74,7 +70,7 @@ class UserType extends AbstractType
 			'group_by' => function($userRole, $key, $index) {
 				return $userRole->getRole()->getSection();
 			},
-		]);
+		]);*/
 
 		return $builder;
 	}

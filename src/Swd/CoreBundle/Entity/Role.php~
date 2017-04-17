@@ -7,7 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Role
  *
- * @ORM\Table(name="role", indexes={@ORM\Index(name="name", columns={"name"})})
+ * @ORM\Table(name="role", indexes={
+ *     @ORM\Index(name="name", columns={"name"}),
+ *     @ORM\Index(name="section", columns={"section"}),
+ *     @ORM\Index(name="priority", columns={"priority"})
+ * })
  * @ORM\Entity
  */
 class Role
@@ -34,6 +38,13 @@ class Role
 	 * @ORM\Column(name="section", type="string", length=255, nullable=true)
 	 */
 	private $section;
+
+	/**
+	 * @var priority
+	 *
+	 * @ORM\Column(name="priority", type="smallint", nullable=false)
+	 */
+	private $priority;
 
     /**
      * Set name
@@ -77,4 +88,54 @@ class Role
 	public function __construct() {
 		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
 	}
+
+    /**
+     * Set section
+     *
+     * @param string $section
+     *
+     * @return Role
+     */
+    public function setSection($section)
+    {
+        $this->section = $section;
+
+        return $this;
+    }
+
+    /**
+     * Get section
+     *
+     * @return string
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+	/**
+	 * Set priority
+	 *
+	 * @param smallint $priority
+	 *
+	 * @return Role
+	 */
+	public function setPriority($priority)
+	{
+		$this->priority = $priority;
+
+		return $this;
+	}
+
+	/**
+	 * Get priority
+	 *
+	 * @return smallint
+	 */
+	public function getPriority()
+	{
+		return $this->priority;
+	}
+
+
 }

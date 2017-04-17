@@ -18,11 +18,12 @@ class UserService extends BaseService
 
 	/**
 	 * UserService constructor.
-	 * @param \Doctrine\ORM\EntityManager $em
+	 * @param Database $db
+	 * @param EncoderFactoryInterface $encoderFactory
 	 */
-	public function __construct( \Doctrine\ORM\EntityManager $em, EncoderFactoryInterface $encoderFactory, Database $db )
+	public function __construct( Database $db, EncoderFactoryInterface $encoderFactory )
 	{
-		parent::__construct( $em, $db );
+		parent::__construct( $db );
 		$this->encoderFactory = $encoderFactory;
 	}
 
@@ -86,7 +87,7 @@ class UserService extends BaseService
 	public function getUserList( $params = array() )
 	{
 		$values = array();
-		$result = $this->getUsers( $params );
+		$result = $this->get( $params );
 
 		foreach($result as $user)
 		{
@@ -129,11 +130,6 @@ class UserService extends BaseService
 		if ( strlen( $where ) > 0 )
 		{
 			$where = " AND " . $where;
-		}
-
-		if ( strstr( $orderBy, "Format" ) )
-		{
-			$orderBy = "u." . str_replace("Format", "", $orderBy);
 		}
 
 		//CommonService::print_r($params);
@@ -260,9 +256,9 @@ class UserService extends BaseService
 			$user->setId( $this->db->lastInsertId() );
 		}
 
-		foreach( $user->getUserRoles() as $userRole )
+		foreach( $user->getUserRoleIds() as $roleId )
 		{
-			$this->saveRole( $user->getId(), $userRole->getRoleId() );
+			$this->saveRole( $user->getId(), $roleId );
 		}
 	}
 
@@ -287,5 +283,53 @@ class UserService extends BaseService
     		WHERE 
     			id = :id';
 		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0 ) );
+	}
+
+	public function getRoleList( $user_id )
+	{
+		$placeholders = array
+		(
+			':user_id' => $user_id
+		);
+
+		$values = array();
+
+		$sql = "SELECT 
+				r.*,
+				ur.user_id
+    		FROM 
+    			role r
+    			LEFT JOIN user_role ur ON (r.id = ur.role_id AND ur.user_id = :user_id)
+    		ORDER BY 
+    			r.section ASC, r.priority ASC";
+		$result = $this->db->fetchAll( $sql, $placeholders );
+		$sectionNum = -1;
+		$section = "";
+		foreach( $result as $row )
+		{
+			if ( $section != $row['section'] )
+			{
+				$sectionNum++;
+				$values[$sectionNum] = array
+				(
+					'name' => $row['section'],
+					'roles' => array()
+				);
+			}
+			$section = $row['section'];
+			$set = ( (int)$row['user_id'] > 0 ) ? 1 : 0;
+			$role_parts = explode( "_", $row['name'] );
+
+			$record = array
+			(
+				'name' => $role_parts[0],
+				'id' => $row['id'],
+				'set' => $set
+			);
+
+			$values[$sectionNum]['roles'][] = $record;
+		}
+
+		return $values;
 	}
 }

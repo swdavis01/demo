@@ -2,11 +2,10 @@
 
 namespace Swd\CoreBundle\Services;
 
-use Swd\CoreBundle\Entity\User;
+use Swd\CoreBundle\Entity\Role;
 use Swd\CoreBundle\Entity\UserRole;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Database\Database;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class RoleService extends BaseService
 {
@@ -14,9 +13,9 @@ class RoleService extends BaseService
 	 * RoleService constructor.
 	 * @param \Doctrine\ORM\EntityManager $em
 	 */
-	public function __construct( \Doctrine\ORM\EntityManager $em, Database $db )
+	public function __construct( Database $db )
 	{
-		parent::__construct( $em, $db );
+		parent::__construct( $db );
 	}
 
 	/**
@@ -56,32 +55,32 @@ class RoleService extends BaseService
 
 		extract( $params );
 
-		//$result = $this->em->getRepository( 'CoreBundle:Role' )->findAll();
-		//print_r($users); exit;
+		$values = array();
 
-		$query = $this->em->createQuery(
-			'SELECT 
-				r
+		$sql = "SELECT 
+				r.*
     		FROM 
-    			CoreBundle:Role r
+    			role r
     		ORDER BY 
-    			r.section ASC, r.priority ASC'
-		);
-
-		$result = $query->getResult();
-
-		$userRoles = array();
-		foreach( $result as $role )
+    			r.section ASC, r.priority ASC";
+		$result = $this->db->fetchAll( $sql );
+		foreach( $result as $row )
 		{
+			$role = new Role();
+			$role->setName( $row['name'] );
+			$role->setSection( $row['section'] );
+			$role->setPriority( $row['priority'] );
+
 			$userRole = new UserRole();
+			$userRole->setRoleId( $row['id'] );
 			$userRole->setUserId( $user_id );
-			$userRole->setRoleId( $role->getId() );
 			$userRole->setRole( $role );
 
-			$userRoles[] = $userRole;
+			$values[] = $userRole;
 		}
 
-		return $userRoles;
+		return $values;
+
 	}
 
 	/**
@@ -91,15 +90,6 @@ class RoleService extends BaseService
 	public function getUserRolesByUserId( $user_id, $params = array() )
 	{
 		extract( $params );
-
-		/*$query = $this->em->createQuery(
-			'SELECT 
-				r
-    		FROM 
-    			CoreBundle:Role r
-    		ORDER BY 
-    			r.section ASC, r.priority ASC'
-		);*/
 
 		$query = $this->em->createQuery(
 			'SELECT 

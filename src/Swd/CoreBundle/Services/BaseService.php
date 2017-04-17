@@ -7,18 +7,12 @@ use Swd\CoreBundle\Database\Database;
 class BaseService
 {
 	/**
-	 * @var \Doctrine\ORM\EntityManager
-	 */
-	protected $em;
-
-	/**
 	 * @var Swd\CoreBundle\Database\Database
 	 */
 	protected $db;
 
-	public function __construct( \Doctrine\ORM\EntityManager $em, Database $db )
+	public function __construct( Database $db )
 	{
-		$this->em = $em;
 		$this->db = $db;
 	}
 

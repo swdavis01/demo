@@ -2,7 +2,6 @@
 
 namespace Swd\CoreBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Services\DateService;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -10,68 +9,52 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
- *
- * @ORM\Table(name="user", indexes={@ORM\Index(name="username", columns={"username"})})
- * @ORM\Entity
  */
 class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @var boolean
-     *
-     * @ORM\Column(name="is_active", type="boolean", nullable=true)
      */
     private $isActive = '1';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=64, nullable=true)
      */
     private $password = '';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="username", type="string", length=255, nullable=false)
-	 * @Assert\NotBlank()
-	 * @Assert\Email(
-	 *     message = "not a valid email address",
-	 *     checkMX = true
-	 * )
      */
     private $username;
 
 	/**
 	 * @var string
-	 *
-	 * @ORM\Column(name="name", type="string", length=255, nullable=false)
-	 * @Assert\NotBlank()
 	 */
 	private $name;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated = 'CURRENT_TIMESTAMP';
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+	/**
+	 */
+	protected $userRoles;
+
+	/**
+	 * @var array()
+	 */
+	protected $userRoleIds;
 
     /**
      * Set isActive
@@ -291,15 +274,11 @@ class User implements AdvancedUserInterface, \Serializable
 		return $this->id;
 	}
 
-	/**
-	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="user", cascade={"persist", "remove"})
-	 */
-	protected $userRoles;
-
 	public function __construct()
 	{
 		$this->isActive = true;
 		$this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->userRoleIds = array();
 		$this->created = new \DateTime();
 		$this->updated = new \DateTime();
 	}
@@ -352,23 +331,15 @@ class User implements AdvancedUserInterface, \Serializable
 	}
 
 	public function getUserRoles() {
+
 		$result = array();
 
 		foreach( $this->userRoles as $userRole )
 		{
 			$result[] = $userRole;
-			//echo $userRole->getUserId() . "_" . $userRole->getRoleId() . "_" . $userRole->getRole()->getName() . "<br />";
-
-			/*$userRole = new UserRole();
-			$userRole->setUserId( $userRole->getUserId() );
-			$userRole->setRoleId( $userRole->getRoleId() );
-			$userRole->setRole( $userRole->getRole() );
-
-			$result[] = $userRole;*/
 		}
 
 		return $result;
-		//return $this->userRoles;
 	}
 
 	public function getRoles()
@@ -380,6 +351,18 @@ class User implements AdvancedUserInterface, \Serializable
 		}
 		//CommonService::debug( $roles ); exit;
 		return $roles;
+	}
+
+	public function setUserRoleIds( $userRoleIds )
+	{
+		if ( is_array( $userRoleIds ) )
+		{
+			$this->userRoleIds = $userRoleIds;
+		}
+	}
+
+	public function getUserRoleIds() {
+		return $this->userRoleIds;
 	}
 
 	public function getRolesString()
@@ -412,7 +395,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function addUserRole(\Swd\CoreBundle\Entity\UserRole $userRole)
     {
         $this->userRoles[] = $userRole;
-		$userRole->setUser($this);
+		//$userRole->setUser($this);
 
         return $this;
     }
