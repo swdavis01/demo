@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -37,6 +38,7 @@ class UserType extends AbstractType
 		$builder
 			->add( 'id', HiddenType::class)
 			->add( 'name', TextType::class, array( 'label' => 'Name', 'required' => true, 'attr' => array( 'placeholder' => 'name', 'novalidate' => 'novalidate' ) ) )
+			->add( 'asset', FileType::class, array( 'label' => 'Icon', 'required' => false, 'attr' => array( 'placeholder' => 'icon', 'novalidate' => 'novalidate' ) ) )
 			->add( 'username', TextType::class, array( 'label' => 'Username (Email)', 'required' => true, 'attr' => array( 'placeholder' => 'username', 'novalidate' => 'novalidate' ) ) )
 			->add( 'save', SubmitType::class );
 

@@ -13,7 +13,7 @@
 
 {% block body %}
 
-    <form action="{{ path('swd_admin_user', {'id': id}) }}" method="post" id="userForm">
+    <form action="{{ path('swd_admin_user', {'id': id}) }}" method="post" id="userForm" enctype="multipart/form-data">
         <div class="card">
             <div>
                 {{ form_errors(form) }}
@@ -38,6 +38,7 @@
                         }
                     });
                     w2ui.userTabs.click('{{ userTabsOn }}');
+//                    $('#assetId').w2field('file', {});
                 });
             </script>
 
@@ -50,11 +51,11 @@
                     {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
                     {{ form_row(form.name) }}
                     {{ form_row(form.password) }}
+                    {{ fields.asset(form.asset, '') }}
                 </div>
                 <div id="roleTab" class="tab" style="display: none;">
                     {{ fields.displayUserRoles(roles) }}
                 </div>
-                {#{{ form_row(form.save) }}#}
                 {{ form_row(form.id) }}
                 {{ form_row(form._token) }}
                 {{ fields.formButtons('user', btnClass, path('swd_admin_user_list')) }}

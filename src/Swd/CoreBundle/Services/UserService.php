@@ -114,11 +114,11 @@ class UserService extends BaseService
 		$orderBy = "u.name";
 		$sortBy = "ASC";
 		$search = "";
-		$is_active = 1;
+		$isActive = 1;
 
 		extract( $this->parseParams( "u.", $params ) );
 
-		$placeholders[':is_active'] = $is_active;
+		$placeholders[':isActive'] = $isActive;
 
 		if ( strlen( $search ) > 0 )
 		{
@@ -148,7 +148,7 @@ class UserService extends BaseService
     			LEFT JOIN user_role ur ON (u.id = ur.user_id)
     			LEFT JOIN role r ON (r.id = ur.role_id)
     		WHERE 
-    			u.is_active = :is_active " . $where . " 
+    			u.isActive = :isActive " . $where . " 
     		ORDER BY 
     			" . $orderBy . " " . $sortBy;
 		$result = $this->db->fetchAll( $sql, $placeholders );
@@ -218,7 +218,7 @@ class UserService extends BaseService
 	public function save( User $user )
 	{
 		$sql = "
-			is_active = :is_active,
+			isActive = :isActive,
 			name = :name,
 			username = :username, 
 			updated = :updated
@@ -226,7 +226,7 @@ class UserService extends BaseService
 
 		$placeholders = array
 		(
-			':is_active' => $user->getIsActive(),
+			':isActive' => $user->getIsActive(),
 			':name' => $user->getName(),
 			':username' => $user->getUsername(),
 			':updated' => DateService::getCurrentDateTimeString()
@@ -293,10 +293,10 @@ class UserService extends BaseService
 			'UPDATE 
     			user
     		SET
-    			is_active = :is_active
+    			isActive = :isActive
     		WHERE 
-    			id = :id AND can_delete = :can_delete';
-		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0, ':can_delete' => 1 ) );
+    			id = :id AND canDelete = :canDelete';
+		$this->db->execute( $sql, array( ':id' => $id, ':isActive' => 0, ':canDelete' => 1 ) );
 	}
 
 	/**

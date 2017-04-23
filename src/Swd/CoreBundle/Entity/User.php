@@ -56,7 +56,17 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	protected $userRoleIds;
 
-    /**
+	/**
+	 * @var int
+	 */
+	private $assetId;
+
+	/**
+	 * @var Swd/CoreBundle/Entity/Asset;
+	 */
+	private $asset;
+
+    /**yy
      * Set isActive
      *
      * @param boolean $isActive
@@ -106,9 +116,7 @@ class User implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Set username
-	 *
 	 * @param string $username
-	 *
 	 * @return User
 	 */
 	public function setUsername($username)
@@ -120,7 +128,6 @@ class User implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Get username
-	 *
 	 * @return string
 	 */
 	public function getUsername()
@@ -154,7 +161,9 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Set created
+     *
      * @param \DateTime $created
+     *
      * @return User
      */
     public function setCreated($created)
@@ -166,6 +175,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Get created
+     *
      * @return \DateTime
      */
     public function getCreated()
@@ -175,6 +185,7 @@ class User implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Get created
+	 *
 	 * @return string
 	 */
 	public function getCreatedDateTime()
@@ -253,6 +264,7 @@ class User implements AdvancedUserInterface, \Serializable
 	public function setId($id)
 	{
 		$this->id = $id;
+
 		return $this;
 	}
 
@@ -401,4 +413,46 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->userRoles->removeElement($userRole);
     }
+
+	/**
+	 * Get assetId
+	 * @return string
+	 */
+	public function getAssetId()
+	{
+		return $this->assetId;
+	}
+
+	/**
+	 * Set assetId
+	 * @param string $assetId
+	 * @return User
+	 */
+	public function setAssetId($assetId)
+	{
+		$this->assetId = $assetId;
+
+		return $this;
+	}
+
+	/**
+	 * Get asset
+	 * @return string
+	 */
+	public function getAsset()
+	{
+		return $this->asset;
+	}
+
+	/**
+	 * Set asset
+	 * @param object $asset
+	 * @return Swd/CoreBundle/Entity/Asset
+	 */
+	public function setAsset( $asset )
+	{
+		$this->asset = $asset;
+
+		return $this;
+	}
 }

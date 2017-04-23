@@ -38,6 +38,17 @@
     {% endif %}
 {% endmacro %}
 
+{% macro asset(form_field, asset) %}
+    {% import _self as fields %}
+    {{ form_row(form_field) }}
+    {#<div class="form_row">#}
+        {#<label for="{{ field_id }}">{{ label }}</label>#}
+        {#<div class="text_widget">#}
+            {#<input name="{{ field_id }}" id="{{ field_id }}" type="file" class="form_control">#}
+        {#</div>#}
+    {#</div>#}
+{% endmacro %}
+
 {% macro formButtons(id, btnClass, cancelLink) %}
     {% import _self as fields %}
     <div style="padding-top: 20px;">

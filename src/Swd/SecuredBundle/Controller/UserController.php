@@ -96,7 +96,7 @@ class UserController extends Controller
 			$id = $this->get( 'swd_core_user_service' )->save( $u );
 
 			// set on tab
-			$this->get( 'swd_core_user_service' )->getSession()->set( 'userTabsOn', $request->request->get('userTabsOn') );
+			$this->get( 'swd_core_user_service' )->getSession()->set( 'userTabsOn', $request->request->get( 'userTabsOn' ) );
 
 			$command = $request->request->get('userSave');
 			if ( $command == "saveClose" )
