@@ -1,0 +1,3 @@
+asset_homepage:
+    path:     /
+    defaults: { _controller: AssetBundle:Default:index }

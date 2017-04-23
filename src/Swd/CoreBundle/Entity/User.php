@@ -154,9 +154,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Set created
-     *
      * @param \DateTime $created
-     *
      * @return User
      */
     public function setCreated($created)
@@ -168,7 +166,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Get created
-     *
      * @return \DateTime
      */
     public function getCreated()
@@ -178,7 +175,6 @@ class User implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Get created
-	 *
 	 * @return string
 	 */
 	public function getCreatedDateTime()
@@ -242,7 +238,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -252,15 +247,12 @@ class User implements AdvancedUserInterface, \Serializable
 
 	/**
 	 * Set id
-	 *
 	 * @param int $id
-	 *
 	 * @return User
 	 */
 	public function setId($id)
 	{
 		$this->id = $id;
-
 		return $this;
 	}
 

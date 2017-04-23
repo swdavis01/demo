@@ -10,6 +10,7 @@ use Swd\CoreBundle\Services\DateService;
 use Swd\SecuredBundle\Voters\UserVoter;
 use Swd\SecuredBundle\Forms\UserType;
 use Swd\CoreBundle\Entity\User;
+use Aws\S3\S3Client;
 
 class UserController extends Controller
 {
@@ -57,6 +58,19 @@ class UserController extends Controller
 	public function formAction($id, Request $request)
 	{
 		$this->denyAccessUnlessGranted(UserVoter::EDIT);
+
+
+
+		$s3 = new S3Client([
+			'version' => 'latest',
+			'region'  => 'us-west-2'
+		]);
+		//echo "";
+
+
+
+
+
 
 		if ( $id > 0 )
 		{

@@ -1,5 +1,5 @@
 <?php
-
+require __DIR__ . '/../src/Aws/aws-autoloader.php';
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new PublicBundle\PublicBundle(),
             new AdminBundle\AdminBundle(),
             new Swd\CoreBundle\CoreBundle(),
+            new Swd\AssetBundle\AssetBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

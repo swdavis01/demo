@@ -109,4 +109,10 @@ Replaced the many-to-many annotation mapping directly between two main entity cl
 - Added voters to check that the logged in user has sufficient permissions to edit the user list.  
 - Added UserType class to enable user form to be used from anywhere.
 
+## 2017-04-16
+- Decided to remove Doctrine. Mapping many to many tables causing too many problems.
+- Replaced with PHP PDO.
+
+## 2017-04-23
+- Started Asset class.
 
