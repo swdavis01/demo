@@ -91,7 +91,7 @@ class UserController extends Controller
 			}
 			return $this->redirect( $this->generateUrl( 'swd_admin_user', array( 'id' => $id ) ) );
 		}
-		
+
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(
 			'form' => $form->createView(),
 			'id' => $id,

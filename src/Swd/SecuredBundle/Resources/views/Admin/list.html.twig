@@ -7,7 +7,7 @@
 
 {% block body %}
 
-    <div id="userGrid" style="width: 100%; height: 400px;"></div>
+    <div id="userGrid" class="grid"></div>
     <script>
         $(function () {
             $('#userGrid').w2grid({
@@ -26,10 +26,10 @@
                 ],
                 columns: [
                     { field: 'recid', caption: 'ID', size: '30px', sortable: true, attr: 'align="center"' },
-                    { field: 'name', caption: 'Name', size: '20%', sortable: true },
+                    { field: 'name', caption: 'Name', size: '20%', sortable: true, info: true },
                     { field: 'username', caption: 'Username', size: '30%', sortable: true },
-                    { field: 'rolesString', caption: 'Roles', size: '30%', sortable: true },
-//                    { field: 'createdDateTimeFormat', caption: 'Created', size: '10%', sortable: true },
+                    { field: 'rolesString', caption: 'Roles', hidden: true },
+                    { field: 'createdDateTimeFormat', caption: 'Created', size: '10%', sortable: true },
                     { field: 'updatedDateTimeFormat', caption: 'Updated', size: '10%', sortable: true }
                 ],
                 onAdd: function (event) {
@@ -40,8 +40,6 @@
                     window.location.href = url;
                 },
                 onDelete: function (event) {
-                    //selected = w2ui.userGrid.getSelection();
-                    //console.log(selected);
                 },
                 onDblClick: function(event) {
                     console.log(event);
