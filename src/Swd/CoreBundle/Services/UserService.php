@@ -211,6 +211,10 @@ class UserService extends BaseService
 		$this->db->execute( $sql, array( ':user_id' => $user_id, ':role_id' => $role_id ) );
 	}
 
+	/**
+	 * @param User $user
+	 * @return int
+	 */
 	public function save( User $user )
 	{
 		$sql = "
@@ -262,8 +266,13 @@ class UserService extends BaseService
 				$this->saveRole( $user->getId(), $roleId );
 			}
 		}
+
+		return $user->getId();
 	}
 
+	/**
+	 * @param array $idArray
+	 */
 	public function deleteUsers( $idArray = array() )
 	{
 		if ( count( $idArray ) )
@@ -275,6 +284,9 @@ class UserService extends BaseService
 		}
 	}
 
+	/**
+	 * @param $id
+	 */
 	public function deleteUser( $id )
 	{
 		$sql =
@@ -287,6 +299,10 @@ class UserService extends BaseService
 		$this->db->execute( $sql, array( ':id' => $id, ':is_active' => 0, ':can_delete' => 1 ) );
 	}
 
+	/**
+	 * @param $user_id
+	 * @return array
+	 */
 	public function getRoleList( $user_id )
 	{
 		$placeholders = array

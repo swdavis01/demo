@@ -70,8 +70,8 @@ class UserController extends Controller
 		{
 			$user = new User();
 		}
+
 		$form = $this->createForm(UserType::class, $user);
-		//var_dump($user->getUserRoles()); exit;
 
 		$form->handleRequest($request);
 
@@ -79,19 +79,25 @@ class UserController extends Controller
 		{
 			$u = $form->getData();
 			$u->setUserRoleIds( $request->request->get('userRoles') );
-			$this->get( 'swd_core_user_service' )->save( $u );
+			$id = $this->get( 'swd_core_user_service' )->save( $u );
+
+			// set on tab
+			$this->get( 'swd_core_user_service' )->getSession()->set( 'userTabsOn', $request->request->get('userTabsOn') );
 
 			$command = $request->request->get('userSave');
-			echo "";
+			if ( $command == "saveClose" )
+			{
+				return $this->redirect( $this->generateUrl( 'swd_admin_user_list' ) );
+			}
+			return $this->redirect( $this->generateUrl( 'swd_admin_user', array( 'id' => $id ) ) );
 		}
-
-		//CommonService::print_r($this->get( 'swd_core_user_service' )->getRoleList( $id )); exit;
-
+		
 		return $this->render('SecuredBundle:Admin:form.html.twig', array(
 			'form' => $form->createView(),
 			'id' => $id,
 			'roles' => $this->get( 'swd_core_user_service' )->getRoleList( $id ),
-			'readonly' => ( $id > 0 ) ? true : false
+			'readonly' => ( $id > 0 ) ? true : false,
+			'userTabsOn' => $this->get( 'swd_core_user_service' )->getSession()->get( 'userTabsOn' )
 		));
 	}
 

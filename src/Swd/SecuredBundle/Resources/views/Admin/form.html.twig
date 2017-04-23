@@ -21,8 +21,8 @@
 
             <script type="text/javascript">
                 $(function () {
-                    $('#tabs').w2tabs({
-                        name: 'tabs',
+                    $('#userTabs').w2tabs({
+                        name: 'userTabs',
                         active: 'userTab',
                         tabs: [
                             { id: 'userTab', text: 'User' },
@@ -34,8 +34,10 @@
                             $('#userTab').css('display', 'none');
                             $('#roleTab').css('display', 'none');
                             $('#' + event.tab.id).css('display', 'block');
+                            $('#userTabsOn').val(event.tab.id);
                         }
                     });
+                    w2ui.userTabs.click('{{ userTabsOn }}');
                 });
             </script>
 
@@ -43,7 +45,7 @@
                 <h2>User Form</h2>
             </div>
             <div class="form">
-                <div id="tabs" class="tabs"></div>
+                <div id="userTabs" class="tabs"></div>
                 <div id="userTab" class="tab" style="display: block;">
                     {{ form_row(form.username, {'attr': {'readonly': readonly}}) }}
                     {{ form_row(form.name) }}
@@ -58,6 +60,7 @@
                 {{ fields.formButtons('user', btnClass, path('swd_admin_user_list')) }}
             </div>
         </div>
+        <input type="hidden" name="userTabsOn" id="userTabsOn" value="{{ userTabsOn }}" />
     </form>
 
 {% endblock %}
