@@ -4,10 +4,14 @@ services:
         class: Swd\CoreBundle\Database\Database
         arguments: ["%database_host%", "%database_name%", "%database_user%", "%database_password%"]
 
+    swd_core_asset_service:
+        class: Swd\CoreBundle\Services\AssetService
+        arguments: ["@swd_core_db", "%asset_config%"]
+
     swd_core_user_service:
         class: Swd\CoreBundle\Services\UserService
-        arguments: ["@swd_core_db", "@security.encoder_factory"]
+        arguments: ["@swd_core_db", "@swd_core_asset_service", "@security.encoder_factory"]
 
     swd_core_role_service:
         class: Swd\CoreBundle\Services\RoleService
-        arguments: ["@swd_core_db"]
+        arguments: ["@swd_core_db", "@swd_core_asset_service"]

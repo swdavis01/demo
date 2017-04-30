@@ -21,9 +21,9 @@ class UserService extends BaseService
 	 * @param Database $db
 	 * @param EncoderFactoryInterface $encoderFactory
 	 */
-	public function __construct( Database $db, EncoderFactoryInterface $encoderFactory )
+	public function __construct( Database $db, \Swd\CoreBundle\Services\AssetService $assetService, EncoderFactoryInterface $encoderFactory )
 	{
-		parent::__construct( $db );
+		parent::__construct( $db, $assetService );
 		$this->encoderFactory = $encoderFactory;
 	}
 
@@ -142,11 +142,13 @@ class UserService extends BaseService
 				r.id AS role_id,
 				r.name AS rowName,
 				r.section AS rowSection,
-				r.priority AS rowPriority
+				r.priority AS rowPriority,
+				a.url AS profileImageUrl
     		FROM 
     			user u
     			LEFT JOIN user_role ur ON (u.id = ur.user_id)
     			LEFT JOIN role r ON (r.id = ur.role_id)
+    			LEFT JOIN asset a ON (u.assetId = a.id)
     		WHERE 
     			u.isActive = :isActive " . $where . " 
     		ORDER BY 
@@ -169,6 +171,7 @@ class UserService extends BaseService
 				$user->setPassword( $row['password'] );
 				$user->setCreated( $row['created'] );
 				$user->setUpdated( $row['updated'] );
+				$user->setProfileImageUrl( $row['profileImageUrl'] );
 			}
 
 			$role = new Role();
@@ -242,6 +245,14 @@ class UserService extends BaseService
 			password = :password";
 
 			$placeholders[':password'] = $user->getPassword();
+		}
+
+		// upload profile image
+		if ( is_object( $user->getAsset() ) )
+		{
+			$assetId = $this->assetService->uploadFile( $user->getAsset(), "admin/user/profiles" );
+			$sql .= ", assetId = :assetId";
+			$placeholders[':assetId'] = $assetId;
 		}
 
 		if ( $user->getId() > 0 )

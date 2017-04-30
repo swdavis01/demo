@@ -66,6 +66,8 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	private $asset;
 
+	private $profileImageUrl;
+
     /**yy
      * Set isActive
      *
@@ -454,5 +456,39 @@ class User implements AdvancedUserInterface, \Serializable
 		$this->asset = $asset;
 
 		return $this;
+	}
+
+
+	/**
+	 * Set profileImageUrl
+	 * @param string $profileImageUrl
+	 * @return User
+	 */
+	public function setProfileImageUrl($profileImageUrl)
+	{
+		$this->profileImageUrl = $profileImageUrl;
+
+		return $this;
+	}
+
+	/**
+	 * Get profileImageUrl
+	 * @return string
+	 */
+	public function getProfileImageUrl()
+	{
+		return $this->profileImageUrl;
+	}
+
+	/**
+	 * Get profileImageUrl
+	 * @return string
+	 */
+	public function getProfileImageUrlTag( $width = 24, $height = 24 )
+	{
+		if ( strlen( $this->profileImageUrl ) > 0 )
+		{
+			return '<img src="' . $this->getProfileImageUrl() . '" width="' . $width . '", height="' . $height . '">';
+		}
 	}
 }

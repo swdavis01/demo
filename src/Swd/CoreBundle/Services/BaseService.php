@@ -3,12 +3,13 @@
 namespace Swd\CoreBundle\Services;
 
 use Swd\CoreBundle\Database\Database;
+use Swd\CoreBundle\Services\AssetService;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class BaseService
 {
 	/**
-	 * @var Swd\CoreBundle\Database\Database
+	 * @var \Swd\CoreBundle\Database\Database
 	 */
 	protected $db;
 
@@ -17,9 +18,20 @@ class BaseService
 	 */
 	protected $session;
 
-	public function __construct( Database $db )
+	/**
+	 * @var \Swd\CoreBundle\Services\AssetService
+	 */
+	protected $assetService;
+
+	/**
+	 * BaseService constructor.
+	 * @param Database $db
+	 * @param \Swd\CoreBundle\Services\AssetService $assetService
+	 */
+	public function __construct( Database $db, AssetService $assetService )
 	{
 		$this->db = $db;
+		$this->assetService = $assetService;
 		$this->session = new Session();
 		$this->session->start();
 	}
