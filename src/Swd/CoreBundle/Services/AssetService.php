@@ -68,7 +68,6 @@ class AssetService
 	public function uploadFile( UploadedFile $file, $path = "" )
 	{
 		$this->connect();
-		echo "";
 
 		$bucketPath = $this->bucket;
 		if ( strlen( $path ) )
@@ -82,7 +81,7 @@ class AssetService
 				'Key'          => $file->getClientOriginalName(),
 				'SourceFile'   => $file->getRealPath(),
 				'ContentType'  => $file->getMimeType(),
-				'ACL'          => 'public-read'
+				'ACL'          => 'authenticated-read'
 			));
 		} catch (S3Exception $e) {
 			echo 'Caught exception: ',  $e->getMessage(), "\n"; exit;
@@ -93,6 +92,7 @@ class AssetService
 			'size' => $file->getSize(),
 			'url' => $result->get('ObjectURL'),
 			'tag' => $result->get('ETag'),
+			'path' => $bucketPath,
 			'name' => $file->getClientOriginalName(),
 			'type' => $file->getMimeType()
 		);
@@ -100,6 +100,22 @@ class AssetService
 		$id = $this->save( $params );
 
 		return $id;
+	}
+
+	public function getObject( $path, $fileName )
+	{
+		$this->connect();
+
+		/*try {
+			$result = $this->client->getObject(array(
+				'Bucket'       => $path,
+				'Key'          => $fileName
+			));
+		} catch (S3Exception $e) {
+			//echo 'Caught exception: ',  $e->getMessage(), "\n"; exit;
+		}
+
+		echo "";*/
 	}
 
 	/**
@@ -113,6 +129,7 @@ class AssetService
   		$url = "";
   		$tag = "";
   		$name = "";
+		$path = "";
   		$type = "";
 		$isActive = 1;
 
@@ -125,6 +142,7 @@ class AssetService
 			url = :url,
 			tag = :tag,
 			name = :name,
+			path = :path,
 			type = :type,
 			created = :created,
 			updated = :updated
@@ -138,6 +156,7 @@ class AssetService
 			':url' => $url,
 			':tag' => $tag,
 			':name' => $name,
+			':path' => $path,
 			':type' => $type,
 			':created' => DateService::getCurrentDateTimeString(),
 			':updated' => DateService::getCurrentDateTimeString()

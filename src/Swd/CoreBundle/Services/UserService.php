@@ -143,7 +143,9 @@ class UserService extends BaseService
 				r.name AS rowName,
 				r.section AS rowSection,
 				r.priority AS rowPriority,
-				a.url AS profileImageUrl
+				a.url AS profileImageUrl,
+				a.path AS profileImagePath,
+				a.name AS profileImageName
     		FROM 
     			user u
     			LEFT JOIN user_role ur ON (u.id = ur.user_id)
@@ -172,6 +174,7 @@ class UserService extends BaseService
 				$user->setCreated( $row['created'] );
 				$user->setUpdated( $row['updated'] );
 				$user->setProfileImageUrl( $row['profileImageUrl'] );
+				//$user->setProfileImageData( $this->assetService->getObject( $row['profileImagePath'], $row['profileImageName'] ) );
 			}
 
 			$role = new Role();

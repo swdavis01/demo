@@ -66,7 +66,15 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	private $asset;
 
+	/**
+	 * @var string
+	 */
 	private $profileImageUrl;
+
+	/**
+	 * @var blob
+	 */
+	private $profileImageData;
 
     /**yy
      * Set isActive
@@ -478,6 +486,27 @@ class User implements AdvancedUserInterface, \Serializable
 	public function getProfileImageUrl()
 	{
 		return $this->profileImageUrl;
+	}
+
+	/**
+	 * Set profileImageData
+	 * @param string $profileImageData
+	 * @return User
+	 */
+	public function setProfileImageData($profileImageData)
+	{
+		$this->profileImageData = $profileImageData;
+
+		return $this;
+	}
+
+	/**
+	 * Get profileImageData
+	 * @return string
+	 */
+	public function getProfileImageData()
+	{
+		return $this->profileImageData;
 	}
 
 	/**
