@@ -1,9 +1,9 @@
-asset:
-    resource: "@AssetBundle/Resources/config/routing.yml"
-    prefix:   /
-
 public:
     resource: "@PublicBundle/Resources/config/routing.yml"
+    prefix:   /
+
+asset:
+    resource: "@AssetBundle/Resources/config/routing.yml"
     prefix:   /
 
 core:
