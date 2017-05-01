@@ -82,36 +82,6 @@ class UserController extends Controller
 			$u->setUserRoleIds( $request->request->get('userRoles') );
 			$id = $this->get( 'swd_core_user_service' )->save( $u );
 
-
-
-
-			/*$s3 = new S3Client(array(
-				'version' => 'latest',
-				'region'  => 'ap-southeast-2',
-				'credentials' => array(
-					'key'    => 'AKIAIMYT26S65J7J67HA',
-					'secret' => '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',
-				)
-			));
-
-			$asset = $u->getAsset();
-
-			$bucket = "swd-demo";
-			$keyname = $asset->getClientOriginalName();
-			$filepath = $asset->getRealPath();
-			$mimeType = $asset->getMimeType();
-
-			$result = $s3->putObject(array(
-				'Bucket'       => $bucket,
-				'Key'          => $keyname,
-				'SourceFile'   => $filepath,
-				'ContentType'  => $mimeType,
-				'ACL'          => 'public-read'
-			));*/
-
-
-
-
 			// set on tab
 			$this->get( 'swd_core_user_service' )->getSession()->set( 'userTabsOn', $request->request->get( 'userTabsOn' ) );
 
