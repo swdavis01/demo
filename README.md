@@ -77,6 +77,9 @@ https://gurayyarar.github.io/AdminBSBMaterialDesign/documentation/#/
 Authentication disabled for admin_theme in:  
 src\Swd\SecuredBundle\Resources\config\security.yml  
 
+## ip-address
+192.168.56.101
+
 ## Cache  
 php bin/console cache:clear --env=dev
 If problems:
