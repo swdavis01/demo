@@ -12,11 +12,13 @@
 namespace Symfony\Component\Serializer\Normalizer;
 
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\ExtraAttributesException;
 use Symfony\Component\Serializer\Exception\LogicException;
-use Symfony\Component\Serializer\Exception\UnexpectedValueException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\Serializer\Mapping\AttributeMetadataInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
@@ -29,9 +31,12 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
 {
     const ENABLE_MAX_DEPTH = 'enable_max_depth';
     const DEPTH_KEY_PATTERN = 'depth_%s::%s';
+    const ALLOW_EXTRA_ATTRIBUTES = 'allow_extra_attributes';
+    const DISABLE_TYPE_ENFORCEMENT = 'disable_type_enforcement';
 
     private $propertyTypeExtractor;
     private $attributesCache = array();
+    private $cache = array();
 
     public function __construct(ClassMetadataFactoryInterface $classMetadataFactory = null, NameConverterInterface $nameConverter = null, PropertyTypeExtractorInterface $propertyTypeExtractor = null)
     {
@@ -45,13 +50,11 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && !$data instanceof \Traversable;
+        return \is_object($data) && !$data instanceof \Traversable;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CircularReferenceException
      */
     public function normalize($object, $format = null, array $context = array())
     {
@@ -67,9 +70,10 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
         $stack = array();
         $attributes = $this->getAttributes($object, $format, $context);
         $class = get_class($object);
+        $attributesMetadata = $this->classMetadataFactory ? $this->classMetadataFactory->getMetadataFor($class)->getAttributesMetadata() : null;
 
         foreach ($attributes as $attribute) {
-            if ($this->isMaxDepthReached($class, $attribute, $context)) {
+            if (null !== $attributesMetadata && $this->isMaxDepthReached($attributesMetadata, $class, $attribute, $context)) {
                 continue;
             }
 
@@ -91,7 +95,7 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                 throw new LogicException(sprintf('Cannot normalize attribute "%s" because the injected serializer is not a normalizer', $attribute));
             }
 
-            $data = $this->updateData($data, $attribute, $this->serializer->normalize($attributeValue, $format, $context));
+            $data = $this->updateData($data, $attribute, $this->serializer->normalize($attributeValue, $format, $this->createChildContext($context, $attribute)));
         }
 
         return $data;
@@ -123,6 +127,10 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
             }
 
             return $allowedAttributes;
+        }
+
+        if (isset($context['attributes'])) {
+            return $this->extractAttributes($object, $format, $context);
         }
 
         if (isset($this->attributesCache[$class])) {
@@ -160,7 +168,7 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return class_exists($type);
+        return isset($this->cache[$type]) ? $this->cache[$type] : $this->cache[$type] = class_exists($type);
     }
 
     /**
@@ -171,18 +179,24 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
         if (!isset($context['cache_key'])) {
             $context['cache_key'] = $this->getCacheKey($format, $context);
         }
+
         $allowedAttributes = $this->getAllowedAttributes($class, $context, true);
         $normalizedData = $this->prepareForDenormalization($data);
+        $extraAttributes = array();
 
         $reflectionClass = new \ReflectionClass($class);
-        $object = $this->instantiateObject($normalizedData, $class, $context, $reflectionClass, $allowedAttributes);
+        $object = $this->instantiateObject($normalizedData, $class, $context, $reflectionClass, $allowedAttributes, $format);
 
         foreach ($normalizedData as $attribute => $value) {
             if ($this->nameConverter) {
                 $attribute = $this->nameConverter->denormalize($attribute);
             }
 
-            if (($allowedAttributes !== false && !in_array($attribute, $allowedAttributes)) || !$this->isAllowedAttribute($class, $attribute, $format, $context)) {
+            if ((false !== $allowedAttributes && !in_array($attribute, $allowedAttributes)) || !$this->isAllowedAttribute($class, $attribute, $format, $context)) {
+                if (isset($context[self::ALLOW_EXTRA_ATTRIBUTES]) && !$context[self::ALLOW_EXTRA_ATTRIBUTES]) {
+                    $extraAttributes[] = $attribute;
+                }
+
                 continue;
             }
 
@@ -190,8 +204,12 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
             try {
                 $this->setAttributeValue($object, $attribute, $value, $format, $context);
             } catch (InvalidArgumentException $e) {
-                throw new UnexpectedValueException($e->getMessage(), $e->getCode(), $e);
+                throw new NotNormalizableValueException($e->getMessage(), $e->getCode(), $e);
             }
+        }
+
+        if (!empty($extraAttributes)) {
+            throw new ExtraAttributesException($extraAttributes);
         }
 
         return $object;
@@ -209,20 +227,6 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
     abstract protected function setAttributeValue($object, $attribute, $value, $format = null, array $context = array());
 
     /**
-     * Should this attribute be normalized?
-     *
-     * @param mixed  $object
-     * @param string $attributeName
-     * @param array  $context
-     *
-     * @return bool
-     */
-    protected function isAttributeToNormalize($object, $attributeName, &$context)
-    {
-        return !in_array($attributeName, $this->ignoredAttributes) && !$this->isMaxDepthReached(get_class($object), $attributeName, $context);
-    }
-
-    /**
      * Validates the submitted data and denormalizes it.
      *
      * @param string      $currentClass
@@ -233,7 +237,7 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
      *
      * @return mixed
      *
-     * @throws UnexpectedValueException
+     * @throws NotNormalizableValueException
      * @throws LogicException
      */
     private function validateAndDenormalize($currentClass, $attribute, $data, $format, array $context)
@@ -267,9 +271,20 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
                     throw new LogicException(sprintf('Cannot denormalize attribute "%s" for class "%s" because injected serializer is not a denormalizer', $attribute, $class));
                 }
 
-                if ($this->serializer->supportsDenormalization($data, $class, $format)) {
-                    return $this->serializer->denormalize($data, $class, $format, $context);
+                $childContext = $this->createChildContext($context, $attribute);
+                if ($this->serializer->supportsDenormalization($data, $class, $format, $childContext)) {
+                    return $this->serializer->denormalize($data, $class, $format, $childContext);
                 }
+            }
+
+            // JSON only has a Number type corresponding to both int and float PHP types.
+            // PHP's json_encode, JavaScript's JSON.stringify, Go's json.Marshal as well as most other JSON encoders convert
+            // floating-point numbers like 12.0 to 12 (the decimal part is dropped when possible).
+            // PHP's json_decode automatically converts Numbers without a decimal part to integers.
+            // To circumvent this behavior, integers are converted to floats when denormalizing JSON based formats and when
+            // a float is expected.
+            if (Type::BUILTIN_TYPE_FLOAT === $builtinType && is_int($data) && false !== strpos($format, JsonEncoder::FORMAT)) {
+                return (float) $data;
             }
 
             if (call_user_func('is_'.$builtinType, $data)) {
@@ -277,7 +292,11 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
             }
         }
 
-        throw new UnexpectedValueException(sprintf('The type of the "%s" attribute for class "%s" must be one of "%s" ("%s" given).', $attribute, $currentClass, implode('", "', array_keys($expectedTypes)), gettype($data)));
+        if (!empty($context[self::DISABLE_TYPE_ENFORCEMENT])) {
+            return $data;
+        }
+
+        throw new NotNormalizableValueException(sprintf('The type of the "%s" attribute for class "%s" must be one of "%s" ("%s" given).', $attribute, $currentClass, implode('", "', array_keys($expectedTypes)), gettype($data)));
     }
 
     /**
@@ -303,42 +322,35 @@ abstract class AbstractObjectNormalizer extends AbstractNormalizer
     /**
      * Is the max depth reached for the given attribute?
      *
-     * @param string $class
-     * @param string $attribute
-     * @param array  $context
+     * @param AttributeMetadataInterface[] $attributesMetadata
+     * @param string                       $class
+     * @param string                       $attribute
+     * @param array                        $context
      *
      * @return bool
      */
-    private function isMaxDepthReached($class, $attribute, array &$context)
+    private function isMaxDepthReached(array $attributesMetadata, $class, $attribute, array &$context)
     {
-        if (!$this->classMetadataFactory || !isset($context[static::ENABLE_MAX_DEPTH])) {
-            return false;
-        }
-
-        $classMetadata = $this->classMetadataFactory->getMetadataFor($class);
-        $attributesMetadata = $classMetadata->getAttributesMetadata();
-
-        if (!isset($attributesMetadata[$attribute])) {
-            return false;
-        }
-
-        $maxDepth = $attributesMetadata[$attribute]->getMaxDepth();
-        if (null === $maxDepth) {
+        if (
+            !isset($context[static::ENABLE_MAX_DEPTH]) ||
+            !isset($attributesMetadata[$attribute]) ||
+            null === $maxDepth = $attributesMetadata[$attribute]->getMaxDepth()
+        ) {
             return false;
         }
 
         $key = sprintf(static::DEPTH_KEY_PATTERN, $class, $attribute);
-        $keyExist = isset($context[$key]);
+        if (!isset($context[$key])) {
+            $context[$key] = 1;
 
-        if ($keyExist && $context[$key] === $maxDepth) {
+            return false;
+        }
+
+        if ($context[$key] === $maxDepth) {
             return true;
         }
 
-        if ($keyExist) {
-            ++$context[$key];
-        } else {
-            $context[$key] = 1;
-        }
+        ++$context[$key];
 
         return false;
     }

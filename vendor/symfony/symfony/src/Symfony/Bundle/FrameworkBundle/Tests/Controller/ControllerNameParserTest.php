@@ -11,9 +11,10 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\Controller;
 
+use Composer\Autoload\ClassLoader;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
-use Symfony\Component\ClassLoader\ClassLoader;
+use Symfony\Component\HttpKernel\Kernel;
 
 class ControllerNameParserTest extends TestCase
 {
@@ -22,17 +23,14 @@ class ControllerNameParserTest extends TestCase
     protected function setUp()
     {
         $this->loader = new ClassLoader();
-        $this->loader->addPrefixes(array(
-            'TestBundle' => __DIR__.'/../Fixtures',
-            'TestApplication' => __DIR__.'/../Fixtures',
-        ));
+        $this->loader->add('TestBundle', __DIR__.'/../Fixtures');
+        $this->loader->add('TestApplication', __DIR__.'/../Fixtures');
         $this->loader->register();
     }
 
     protected function tearDown()
     {
-        spl_autoload_unregister(array($this->loader, 'loadClass'));
-
+        $this->loader->unregister();
         $this->loader = null;
     }
 
@@ -101,10 +99,17 @@ class ControllerNameParserTest extends TestCase
 
     public function getMissingControllersTest()
     {
-        return array(
-            array('FooBundle:Fake:index'),          // a normal bundle
-            array('SensioFooBundle:Fake:index'),    // a bundle with children
+        // a normal bundle
+        $bundles = array(
+            array('FooBundle:Fake:index'),
         );
+
+        // a bundle with children
+        if (Kernel::VERSION_ID < 40000) {
+            $bundles[] = array('SensioFooBundle:Fake:index');
+        }
+
+        return $bundles;
     }
 
     /**
@@ -147,7 +152,7 @@ class ControllerNameParserTest extends TestCase
             'FabpotFooBundle' => array($this->getBundle('TestBundle\Fabpot\FooBundle', 'FabpotFooBundle'), $this->getBundle('TestBundle\Sensio\FooBundle', 'SensioFooBundle')),
         );
 
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\KernelInterface');
+        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
         $kernel
             ->expects($this->any())
             ->method('getBundle')
@@ -178,7 +183,7 @@ class ControllerNameParserTest extends TestCase
 
     private function getBundle($namespace, $name)
     {
-        $bundle = $this->getMock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $bundle->expects($this->any())->method('getName')->will($this->returnValue($name));
         $bundle->expects($this->any())->method('getNamespace')->will($this->returnValue($namespace));
 

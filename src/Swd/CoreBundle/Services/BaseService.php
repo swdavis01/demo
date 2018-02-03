@@ -33,7 +33,7 @@ class BaseService
 		$this->db = $db;
 		$this->assetService = $assetService;
 		$this->session = new Session();
-		$this->session->start();
+		//$this->session->start();
 	}
 
 	public function self()

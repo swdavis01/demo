@@ -46,12 +46,28 @@ class Logger extends BaseLogger implements DebugLoggerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function clear()
+    {
+        if (($logger = $this->getDebugLogger()) && method_exists($logger, 'clear')) {
+            $logger->clear();
+        }
+    }
+
+    /**
      * Returns a DebugLoggerInterface instance if one is registered with this logger.
      *
      * @return DebugLoggerInterface|null A DebugLoggerInterface instance or null if none is registered
      */
     private function getDebugLogger()
     {
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof DebugLoggerInterface) {
+                return $processor;
+            }
+        }
+
         foreach ($this->handlers as $handler) {
             if ($handler instanceof DebugLoggerInterface) {
                 return $handler;

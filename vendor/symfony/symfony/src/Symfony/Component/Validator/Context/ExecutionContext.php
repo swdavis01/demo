@@ -30,8 +30,7 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilder;
  *
  * @see ExecutionContextInterface
  *
- * @internal You should not instantiate or use this class. Code against
- *           {@link ExecutionContextInterface} instead.
+ * @internal since version 2.5. Code against ExecutionContextInterface instead.
  */
 class ExecutionContext implements ExecutionContextInterface
 {
@@ -267,6 +266,11 @@ class ExecutionContext implements ExecutionContextInterface
     public function getGroup()
     {
         return $this->group;
+    }
+
+    public function getConstraint()
+    {
+        return $this->constraint;
     }
 
     /**

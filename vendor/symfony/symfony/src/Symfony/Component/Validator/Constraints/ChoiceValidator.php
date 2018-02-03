@@ -47,7 +47,8 @@ class ChoiceValidator extends ConstraintValidator
         }
 
         if ($constraint->callback) {
-            if (!is_callable($choices = array($this->context->getClassName(), $constraint->callback))
+            if (!is_callable($choices = array($this->context->getObject(), $constraint->callback))
+                && !is_callable($choices = array($this->context->getClassName(), $constraint->callback))
                 && !is_callable($choices = $constraint->callback)
             ) {
                 throw new ConstraintDefinitionException('The Choice constraint expects a valid callback');
@@ -55,6 +56,10 @@ class ChoiceValidator extends ConstraintValidator
             $choices = call_user_func($choices);
         } else {
             $choices = $constraint->choices;
+        }
+
+        if (true !== $constraint->strict) {
+            @trigger_error('Not setting the strict option of the Choice constraint to true is deprecated since Symfony 3.4 and will throw an exception in 4.0.', E_USER_DEPRECATED);
         }
 
         if ($constraint->multiple) {
@@ -72,7 +77,7 @@ class ChoiceValidator extends ConstraintValidator
 
             $count = count($value);
 
-            if ($constraint->min !== null && $count < $constraint->min) {
+            if (null !== $constraint->min && $count < $constraint->min) {
                 $this->context->buildViolation($constraint->minMessage)
                     ->setParameter('{{ limit }}', $constraint->min)
                     ->setPlural((int) $constraint->min)
@@ -82,7 +87,7 @@ class ChoiceValidator extends ConstraintValidator
                 return;
             }
 
-            if ($constraint->max !== null && $count > $constraint->max) {
+            if (null !== $constraint->max && $count > $constraint->max) {
                 $this->context->buildViolation($constraint->maxMessage)
                     ->setParameter('{{ limit }}', $constraint->max)
                     ->setPlural((int) $constraint->max)

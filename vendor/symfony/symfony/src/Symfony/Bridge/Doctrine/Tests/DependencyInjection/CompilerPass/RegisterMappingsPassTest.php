@@ -2,11 +2,12 @@
 
 namespace Symfony\Bridge\Doctrine\Tests\DependencyInjection\CompilerPass;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Doctrine\DependencyInjection\CompilerPass\RegisterMappingsPass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class RegisterMappingsPassTest extends \PHPUnit_Framework_TestCase
+class RegisterMappingsPassTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
@@ -14,9 +15,7 @@ class RegisterMappingsPassTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoDriverParmeterException()
     {
-        $container = $this->createBuilder(array(
-
-        ));
+        $container = $this->createBuilder();
         $this->process($container, array(
             'manager.param.one',
             'manager.param.two',

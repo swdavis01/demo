@@ -15,6 +15,8 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
+use Symfony\Component\Cache\PruneableInterface;
+use Symfony\Component\Cache\ResettableInterface;
 
 /**
  * Chains several adapters together.
@@ -24,9 +26,10 @@ use Symfony\Component\Cache\Exception\InvalidArgumentException;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class ChainAdapter implements AdapterInterface
+class ChainAdapter implements AdapterInterface, PruneableInterface, ResettableInterface
 {
     private $adapters = array();
+    private $adapterCount;
     private $saveUp;
 
     /**
@@ -50,6 +53,7 @@ class ChainAdapter implements AdapterInterface
                 $this->adapters[] = new ProxyAdapter($adapter);
             }
         }
+        $this->adapterCount = count($this->adapters);
 
         $this->saveUp = \Closure::bind(
             function ($adapter, $item) use ($maxLifetime) {
@@ -146,9 +150,10 @@ class ChainAdapter implements AdapterInterface
     public function clear()
     {
         $cleared = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $cleared = $adapter->clear() && $cleared;
+        while ($i--) {
+            $cleared = $this->adapters[$i]->clear() && $cleared;
         }
 
         return $cleared;
@@ -160,9 +165,10 @@ class ChainAdapter implements AdapterInterface
     public function deleteItem($key)
     {
         $deleted = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $deleted = $adapter->deleteItem($key) && $deleted;
+        while ($i--) {
+            $deleted = $this->adapters[$i]->deleteItem($key) && $deleted;
         }
 
         return $deleted;
@@ -174,9 +180,10 @@ class ChainAdapter implements AdapterInterface
     public function deleteItems(array $keys)
     {
         $deleted = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $deleted = $adapter->deleteItems($keys) && $deleted;
+        while ($i--) {
+            $deleted = $this->adapters[$i]->deleteItems($keys) && $deleted;
         }
 
         return $deleted;
@@ -188,9 +195,10 @@ class ChainAdapter implements AdapterInterface
     public function save(CacheItemInterface $item)
     {
         $saved = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $saved = $adapter->save($item) && $saved;
+        while ($i--) {
+            $saved = $this->adapters[$i]->save($item) && $saved;
         }
 
         return $saved;
@@ -202,9 +210,10 @@ class ChainAdapter implements AdapterInterface
     public function saveDeferred(CacheItemInterface $item)
     {
         $saved = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $saved = $adapter->saveDeferred($item) && $saved;
+        while ($i--) {
+            $saved = $this->adapters[$i]->saveDeferred($item) && $saved;
         }
 
         return $saved;
@@ -216,11 +225,40 @@ class ChainAdapter implements AdapterInterface
     public function commit()
     {
         $committed = true;
+        $i = $this->adapterCount;
 
-        foreach ($this->adapters as $adapter) {
-            $committed = $adapter->commit() && $committed;
+        while ($i--) {
+            $committed = $this->adapters[$i]->commit() && $committed;
         }
 
         return $committed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prune()
+    {
+        $pruned = true;
+
+        foreach ($this->adapters as $adapter) {
+            if ($adapter instanceof PruneableInterface) {
+                $pruned = $adapter->prune() && $pruned;
+            }
+        }
+
+        return $pruned;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
+        foreach ($this->adapters as $adapter) {
+            if ($adapter instanceof ResettableInterface) {
+                $adapter->reset();
+            }
+        }
     }
 }

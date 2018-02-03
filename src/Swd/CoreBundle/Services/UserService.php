@@ -289,7 +289,7 @@ class UserService extends BaseService
 	 */
 	public function deleteUsers( $idArray = array() )
 	{
-		if ( count( $idArray ) )
+		if ( count( $idArray ) > 0 )
 		{
 			foreach( $idArray as $id )
 			{

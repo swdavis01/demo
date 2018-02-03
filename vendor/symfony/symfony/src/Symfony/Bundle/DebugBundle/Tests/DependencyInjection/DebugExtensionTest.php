@@ -11,11 +11,12 @@
 
 namespace Symfony\Bundle\DebugBundle\Tests\DependencyInjection;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\DebugBundle\DependencyInjection\DebugExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-class DebugExtensionTest extends \PHPUnit_Framework_TestCase
+class DebugExtensionTest extends TestCase
 {
     public function testLoadWithoutConfiguration()
     {
@@ -39,7 +40,6 @@ class DebugExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $container = new ContainerBuilder(new ParameterBag(array(
             'kernel.cache_dir' => __DIR__,
-            'kernel.root_dir' => __DIR__.'/Fixtures',
             'kernel.charset' => 'UTF-8',
             'kernel.debug' => true,
             'kernel.bundles' => array('DebugBundle' => 'Symfony\\Bundle\\DebugBundle\\DebugBundle'),

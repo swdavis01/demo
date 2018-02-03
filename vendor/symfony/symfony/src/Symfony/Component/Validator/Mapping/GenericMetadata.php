@@ -114,9 +114,7 @@ class GenericMetadata implements MetadataInterface
      *  - {@link TraversalStrategy::IMPLICIT} if $traverse is enabled
      *  - {@link TraversalStrategy::NONE} if $traverse is disabled
      *
-     * @param Constraint $constraint The constraint to add
-     *
-     * @return GenericMetadata This object
+     * @return $this
      *
      * @throws ConstraintDefinitionException When trying to add the
      *                                       {@link Traverse} constraint
@@ -131,7 +129,7 @@ class GenericMetadata implements MetadataInterface
             ));
         }
 
-        if ($constraint instanceof Valid) {
+        if ($constraint instanceof Valid && null === $constraint->groups) {
             $this->cascadingStrategy = CascadingStrategy::CASCADE;
 
             if ($constraint->traverse) {
@@ -157,7 +155,7 @@ class GenericMetadata implements MetadataInterface
      *
      * @param Constraint[] $constraints The constraints to add
      *
-     * @return GenericMetadata This object
+     * @return $this
      */
     public function addConstraints(array $constraints)
     {

@@ -81,7 +81,7 @@ class AssetService
 				'Key'          => $file->getClientOriginalName(),
 				'SourceFile'   => $file->getRealPath(),
 				'ContentType'  => $file->getMimeType(),
-				'ACL'          => 'authenticated-read'
+				'ACL'          => 'public-read'
 			));
 		} catch (S3Exception $e) {
 			echo 'Caught exception: ',  $e->getMessage(), "\n"; exit;

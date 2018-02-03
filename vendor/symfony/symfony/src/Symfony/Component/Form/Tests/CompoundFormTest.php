@@ -298,6 +298,8 @@ class CompoundFormTest extends AbstractFormTest
     public function testRemoveIgnoresUnknownName()
     {
         $this->form->remove('notexisting');
+
+        $this->assertCount(0, $this->form);
     }
 
     public function testArrayAccess()
@@ -306,12 +308,12 @@ class CompoundFormTest extends AbstractFormTest
 
         $this->form[] = $child;
 
-        $this->assertTrue(isset($this->form['foo']));
+        $this->assertArrayHasKey('foo', $this->form);
         $this->assertSame($child, $this->form['foo']);
 
         unset($this->form['foo']);
 
-        $this->assertFalse(isset($this->form['foo']));
+        $this->assertArrayNotHasKey('foo', $this->form);
     }
 
     public function testCountable()
@@ -877,7 +879,7 @@ class CompoundFormTest extends AbstractFormTest
     // Basic cases are covered in SimpleFormTest
     public function testCreateViewWithChildren()
     {
-        $type = $this->getMock('Symfony\Component\Form\ResolvedFormTypeInterface');
+        $type = $this->getMockBuilder('Symfony\Component\Form\ResolvedFormTypeInterface')->getMock();
         $options = array('a' => 'Foo', 'b' => 'Bar');
         $field1 = $this->getMockForm('foo');
         $field2 = $this->getMockForm('bar');
@@ -1010,6 +1012,28 @@ class CompoundFormTest extends AbstractFormTest
         $this->form->submit(array());
 
         $this->assertSame($button, $this->form->getClickedButton());
+    }
+
+    public function testDisabledButtonIsNotSubmitted()
+    {
+        $button = new SubmitButtonBuilder('submit');
+        $submit = $button
+            ->setDisabled(true)
+            ->getForm();
+
+        $form = $this->createForm()
+            ->add($this->getBuilder('text')->getForm())
+            ->add($submit)
+        ;
+
+        $form->submit(array(
+            'text' => '',
+            'submit' => '',
+        ));
+
+        $this->assertTrue($submit->isDisabled());
+        $this->assertFalse($submit->isClicked());
+        $this->assertFalse($submit->isSubmitted());
     }
 
     protected function createForm()

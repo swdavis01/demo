@@ -6,14 +6,15 @@ framework:
         csrf_protection:
             field_name: _csrf
     http_method_override: false
-    trusted_proxies: ['127.0.0.1', '10.0.0.1']
     esi:
+        enabled: true
+    ssi:
         enabled: true
     profiler:
         only_exceptions: true
         enabled: false
     router:
-        resource:     '%kernel.root_dir%/config/routing.xml'
+        resource:     '%kernel.project_dir%/config/routing.xml'
         type:         xml
     session:
         storage_id:      session.storage.native
@@ -41,10 +42,10 @@ framework:
     translator:
         enabled:  true
         fallback: fr
-        paths: ['%kernel.root_dir%/Fixtures/translations']
+        default_path: '%kernel.project_dir%/translations'
+        paths: ['%kernel.project_dir%/Fixtures/translations']
     validation:
         enabled: true
-        cache:   validator.mapping.cache.doctrine.apc
     annotations:
         cache:   file
         debug:   true

@@ -1,24 +1,25 @@
 <?php
 
 /*
- * This file is part of the Symfony framework.
+ * This file is part of the Symfony package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Sensio\Bundle\FrameworkExtraBundle\EventListener;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser;
 
 /**
  * Handles the Template annotation for actions.
@@ -29,56 +30,43 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class TemplateListener implements EventSubscriberInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    private $templateGuesser;
+    private $twig;
 
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container The service container instance
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(TemplateGuesser $templateGuesser, \Twig_Environment $twig = null)
     {
-        $this->container = $container;
+        $this->templateGuesser = $templateGuesser;
+        $this->twig = $twig;
     }
 
     /**
      * Guesses the template name to render and its variables and adds them to
      * the request object.
-     *
-     * @param FilterControllerEvent $event A FilterControllerEvent instance
      */
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
         $template = $request->attributes->get('_template');
 
-        // no @Template present
-        if (null === $template) {
+        if (!$template instanceof Template) {
             return;
         }
 
-        // we need the @Template annotation object or we cannot continue
-        if (!$template instanceof Template) {
-            throw new \InvalidArgumentException('Request attribute "_template" is reserved for @Template annotations.');
+        $controller = $event->getController();
+        if (!is_array($controller) && method_exists($controller, '__invoke')) {
+            $controller = array($controller, '__invoke');
         }
-
-        $template->setOwner($controller = $event->getController());
+        $template->setOwner($controller);
 
         // when no template has been given, try to resolve it based on the controller
         if (null === $template->getTemplate()) {
-            $guesser = $this->container->get('sensio_framework_extra.view.guesser');
-            $template->setTemplate($guesser->guessTemplateName($controller, $request, $template->getEngine()));
+            $template->setTemplate($this->templateGuesser->guessTemplateName($controller, $request));
         }
     }
 
     /**
      * Renders the template and initializes a new response object with the
      * rendered template content.
-     *
-     * @param GetResponseForControllerResultEvent $event
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
@@ -86,8 +74,12 @@ class TemplateListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $template = $request->attributes->get('_template');
 
-        if (null === $template) {
+        if (!$template instanceof Template) {
             return;
+        }
+
+        if (null === $this->twig) {
+            throw new \LogicException('You can not use the "@Template" annotation if the Twig Bundle is not available.');
         }
 
         $parameters = $event->getControllerResult();
@@ -101,22 +93,23 @@ class TemplateListener implements EventSubscriberInterface
         }
 
         // attempt to render the actual response
-        $templating = $this->container->get('templating');
-
         if ($template->isStreamable()) {
-            $callback = function () use ($templating, $template, $parameters) {
-                return $templating->stream($template->getTemplate(), $parameters);
+            $callback = function () use ($template, $parameters) {
+                $this->twig->display($template->getTemplate(), $parameters);
             };
 
             $event->setResponse(new StreamedResponse($callback));
+        } else {
+            $event->setResponse(new Response($this->twig->render($template->getTemplate(), $parameters)));
         }
 
         // make sure the owner (controller+dependencies) is not cached or stored elsewhere
         $template->setOwner(array());
-
-        $event->setResponse($templating->renderResponse($template->getTemplate(), $parameters));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -125,14 +118,6 @@ class TemplateListener implements EventSubscriberInterface
         );
     }
 
-    /**
-     * @param Request  $request
-     * @param Template $template
-     * @param object   $controller
-     * @param string   $action
-     *
-     * @return array
-     */
     private function resolveDefaultParameters(Request $request, Template $template, $controller, $action)
     {
         $parameters = array();
@@ -143,14 +128,18 @@ class TemplateListener implements EventSubscriberInterface
 
             $arguments = array();
             foreach ($r->getMethod($action)->getParameters() as $param) {
-                $arguments[] = $param->getName();
+                $arguments[] = $param;
             }
         }
 
         // fetch the arguments of @Template.vars or everything if desired
         // and assign them to the designated template
         foreach ($arguments as $argument) {
-            $parameters[$argument] = $request->attributes->get($argument);
+            if ($argument instanceof \ReflectionParameter) {
+                $parameters[$name = $argument->getName()] = !$request->attributes->has($name) && $argument->isDefaultValueAvailable() ? $argument->getDefaultValue() : $request->attributes->get($name);
+            } else {
+                $parameters[$argument] = $request->attributes->get($argument);
+            }
         }
 
         return $parameters;

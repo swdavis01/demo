@@ -12,6 +12,8 @@
 namespace Symfony\Component\Form\Tests\Extension\Validator\Type;
 
 use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
@@ -68,6 +70,15 @@ abstract class BaseValidatorExtensionTest extends TypeTestCase
         ));
 
         $this->assertInternalType('callable', $form->getConfig()->getOption('validation_groups'));
+    }
+
+    public function testValidationGroupsCanBeSetToGroupSequence()
+    {
+        $form = $this->createForm(array(
+            'validation_groups' => new GroupSequence(array('group1', 'group2')),
+        ));
+
+        $this->assertInstanceOf('Symfony\Component\Validator\Constraints\GroupSequence', $form->getConfig()->getOption('validation_groups'));
     }
 
     abstract protected function createForm(array $options = array());
