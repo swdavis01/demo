@@ -109,7 +109,7 @@ class UserService extends BaseService
 
 	private function get( $params = array() )
 	{
-		$where = "";
+		$where = "1";
 		$placeholders = array();
 		$orderBy = "u.name";
 		$sortBy = "ASC";

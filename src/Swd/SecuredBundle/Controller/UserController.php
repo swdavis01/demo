@@ -52,7 +52,8 @@ class UserController extends Controller
 			}
 		}
 
-		return ApiResponse::Response( $request, $this->get( 'swd_core_user_service' )->getUsers( $params ) );
+		$records = $this->get( 'swd_core_user_service' )->getUsers( $params );
+		return ApiResponse::Response( $request, $records );
 	}
 
 	public function formAction($id, Request $request)
