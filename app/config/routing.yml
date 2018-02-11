@@ -1,3 +1,7 @@
+music:
+    resource: "@MusicBundle/Resources/config/routing.yml"
+    prefix:   /
+
 public:
     resource: "@PublicBundle/Resources/config/routing.yml"
     prefix:   /

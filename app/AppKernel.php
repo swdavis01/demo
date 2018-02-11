@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new AdminBundle\AdminBundle(),
             new Swd\CoreBundle\CoreBundle(),
             new Swd\AssetBundle\AssetBundle(),
+            new Swd\MusicBundle\MusicBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
