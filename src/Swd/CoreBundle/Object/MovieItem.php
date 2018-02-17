@@ -1,33 +1,15 @@
 <?php
 
-namespace Swd\CoreBundle\Entity;
+namespace Swd\CoreBundle\Object;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * MovieItem
  *
- * @ORM\Table(name="movie_item", indexes={@ORM\Index(name="year", columns={"year"}), @ORM\Index(name="format_id", columns={"format_id"}), @ORM\Index(name="title", columns={"title"})})
- * @ORM\Entity
  */
 class MovieItem
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="bigint", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_active", type="boolean", nullable=true)
-     */
-    private $isActive = '1';
-
     /**
      * @var integer
      *
@@ -64,54 +46,15 @@ class MovieItem
     private $image;
 
     /**
-     * @var \DateTime
+     * @var integer
      *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $created = 'CURRENT_TIMESTAMP';
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = 'CURRENT_TIMESTAMP';
+    private $id;
 
 
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set isActive
-     *
-     * @param boolean $isActive
-     *
-     * @return MovieItem
-     */
-    public function setIsActive($isActive)
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    /**
-     * Get isActive
-     *
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
 
     /**
      * Set year
@@ -234,50 +177,12 @@ class MovieItem
     }
 
     /**
-     * Set created
+     * Get id
      *
-     * @param \DateTime $created
-     *
-     * @return MovieItem
+     * @return integer
      */
-    public function setCreated($created)
+    public function getId()
     {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return MovieItem
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
+        return $this->id;
     }
 }

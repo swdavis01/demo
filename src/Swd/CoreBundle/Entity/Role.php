@@ -2,34 +2,157 @@
 
 namespace Swd\CoreBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Role
+ *
+ * @ORM\Table(name="role", indexes={@ORM\Index(name="name", columns={"name"})})
+ * @ORM\Entity
  */
 class Role
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=true)
+     */
+    private $isActive = '1';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="can_delete", type="boolean", nullable=true)
+     */
+    private $canDelete = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="priority", type="smallint", nullable=true)
+     */
+    private $priority = '0';
+
+    /**
      * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
-     * @var integer
+     * @var string
+     *
+     * @ORM\Column(name="section", type="string", length=255, nullable=false)
      */
-    private $id;
+    private $section;
 
-	/**
-	 * @var string
-	 */
-	private $section;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
 
-	/**
-	 * @var priority
-	 */
-	private $priority;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
 
-	/**
-	 */
-	protected $users;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return Role
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set canDelete
+     *
+     * @param boolean $canDelete
+     *
+     * @return Role
+     */
+    public function setCanDelete($canDelete)
+    {
+        $this->canDelete = $canDelete;
+
+        return $this;
+    }
+
+    /**
+     * Get canDelete
+     *
+     * @return boolean
+     */
+    public function getCanDelete()
+    {
+        return $this->canDelete;
+    }
+
+    /**
+     * Set priority
+     *
+     * @param integer $priority
+     *
+     * @return Role
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Get priority
+     *
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
 
     /**
      * Set name
@@ -56,20 +179,6 @@ class Role
     }
 
     /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-	public function __construct() {
-		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
-	}
-
-    /**
      * Set section
      *
      * @param string $section
@@ -93,63 +202,51 @@ class Role
         return $this->section;
     }
 
-	/**
-	 * Set priority
-	 *
-	 * @param smallint $priority
-	 *
-	 * @return Role
-	 */
-	public function setPriority($priority)
-	{
-		$this->priority = $priority;
-
-		return $this;
-	}
-
-	/**
-	 * Get priority
-	 *
-	 * @return smallint
-	 */
-	public function getPriority()
-	{
-		return $this->priority;
-	}
-
-
-
     /**
-     * Add user
+     * Set created
      *
-     * @param \Swd\CoreBundle\Entity\UserRole $user
+     * @param \DateTime $created
      *
      * @return Role
      */
-    public function addUser(\Swd\CoreBundle\Entity\UserRole $user)
+    public function setCreated($created)
     {
-        $this->users[] = $user;
+        $this->created = $created;
 
         return $this;
     }
 
     /**
-     * Remove user
+     * Get created
      *
-     * @param \Swd\CoreBundle\Entity\UserRole $user
+     * @return \DateTime
      */
-    public function removeUser(\Swd\CoreBundle\Entity\UserRole $user)
+    public function getCreated()
     {
-        $this->users->removeElement($user);
+        return $this->created;
     }
 
     /**
-     * Get users
+     * Set updated
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @param \DateTime $updated
+     *
+     * @return Role
      */
-    public function getUsers()
+    public function setUpdated($updated)
     {
-        return $this->users;
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 }

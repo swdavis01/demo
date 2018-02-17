@@ -2,8 +2,8 @@
 
 namespace Swd\CoreBundle\Services;
 
-use Swd\CoreBundle\Entity\Role;
-use Swd\CoreBundle\Entity\UserRole;
+use Swd\CoreBundle\Object\Role;
+use Swd\CoreBundle\Object\UserRole;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Database\Database;
 

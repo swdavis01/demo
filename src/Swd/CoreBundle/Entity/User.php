@@ -2,102 +2,167 @@
 
 namespace Swd\CoreBundle\Entity;
 
-use Swd\CoreBundle\Services\CommonService;
-use Swd\CoreBundle\Services\DateService;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * User
+ *
+ * @ORM\Table(name="user", indexes={@ORM\Index(name="username", columns={"username"}), @ORM\Index(name="assetId", columns={"assetId"}), @ORM\Index(name="createdBy", columns={"createdBy"}), @ORM\Index(name="updatedBy", columns={"updatedBy"})})
+ * @ORM\Entity
  */
-class User implements AdvancedUserInterface, \Serializable
+class User
 {
     /**
-     * @var boolean
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $isActive = '1';
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isActive", type="boolean", nullable=true)
+     */
+    private $isactive;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="canDelete", type="boolean", nullable=true)
+     */
+    private $candelete;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=64, nullable=false)
      */
     private $password = '';
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="username", type="string", length=255, nullable=false)
      */
     private $username;
 
-	/**
-	 * @var string
-	 */
-	private $name;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
+    private $name;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
     private $created = 'CURRENT_TIMESTAMP';
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated = 'CURRENT_TIMESTAMP';
 
     /**
      * @var integer
-     */
-    private $id;
-
-	/**
-	 */
-	protected $userRoles;
-
-	/**
-	 * @var array()
-	 */
-	protected $userRoleIds;
-
-	/**
-	 * @var int
-	 */
-	private $assetId;
-
-	/**
-	 * @var Swd/CoreBundle/Entity/Asset;
-	 */
-	private $asset;
-
-	/**
-	 * @var string
-	 */
-	private $profileImageUrl;
-
-	/**
-	 * @var blob
-	 */
-	private $profileImageData;
-
-    /**yy
-     * Set isActive
      *
-     * @param boolean $isActive
+     * @ORM\Column(name="assetId", type="bigint", nullable=false)
+     */
+    private $assetid = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="createdBy", type="bigint", nullable=false)
+     */
+    private $createdby = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updatedBy", type="bigint", nullable=false)
+     */
+    private $updatedby = '0';
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
      *
      * @return User
      */
-    public function setIsActive($isActive)
+    public function setId($id)
     {
-        $this->isActive = $isActive;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get isActive
+     * Set isactive
+     *
+     * @param boolean $isactive
+     *
+     * @return User
+     */
+    public function setIsactive($isactive)
+    {
+        $this->isactive = $isactive;
+
+        return $this;
+    }
+
+    /**
+     * Get isactive
      *
      * @return boolean
      */
-    public function getIsActive()
+    public function getIsactive()
     {
-        return $this->isActive;
+        return $this->isactive;
+    }
+
+    /**
+     * Set candelete
+     *
+     * @param boolean $candelete
+     *
+     * @return User
+     */
+    public function setCandelete($candelete)
+    {
+        $this->candelete = $candelete;
+
+        return $this;
+    }
+
+    /**
+     * Get candelete
+     *
+     * @return boolean
+     */
+    public function getCandelete()
+    {
+        return $this->candelete;
     }
 
     /**
@@ -124,50 +189,53 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->password;
     }
 
-	/**
-	 * Set username
-	 * @param string $username
-	 * @return User
-	 */
-	public function setUsername($username)
-	{
-		$this->username = $username;
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get username
-	 * @return string
-	 */
-	public function getUsername()
-	{
-		return $this->username;
-	}
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
 
-	/**
-	 * Set name
-	 *
-	 * @param string $name
-	 *
-	 * @return User
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get name
-	 *
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
     /**
      * Set created
@@ -193,26 +261,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->created;
     }
 
-	/**
-	 * Get created
-	 *
-	 * @return string
-	 */
-	public function getCreatedDateTime()
-	{
-		return DateService::getDateTime( $this->created );
-	}
-
-	/**
-	 * Get created
-	 *
-	 * @return string
-	 */
-	public function getCreatedDateTimeFormat()
-	{
-		return DateService::formatDateTimeString( $this->created );
-	}
-
     /**
      * Set updated
      *
@@ -237,287 +285,75 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->updated;
     }
 
-	/**
-	 * Get updated
-	 *
-	 * @return string
-	 */
-	public function getUpdatedDateTime()
-	{
-		return DateService::getDateTime( $this->updated );
-	}
-
-	/**
-	 * Get updated
-	 *
-	 * @return string
-	 */
-	public function getUpdatedDateTimeFormat()
-	{
-		return DateService::formatDateTimeString( $this->updated );
-	}
-
     /**
-     * Get id
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-	/**
-	 * Set id
-	 * @param int $id
-	 * @return User
-	 */
-	public function setId($id)
-	{
-		$this->id = $id;
-
-		return $this;
-	}
-
-	/**
-	 * Get id
-	 *
-	 * @return integer
-	 */
-	public function getRecid()
-	{
-		return $this->id;
-	}
-
-	public function __construct()
-	{
-		$this->isActive = true;
-		$this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->userRoleIds = array();
-		$this->created = new \DateTime();
-		$this->updated = new \DateTime();
-	}
-
-	/** @see \Serializable::serialize() */
-	public function serialize()
-	{
-		return serialize(array(
-			$this->id,
-			$this->username,
-			$this->password,
-		));
-	}
-
-	/** @see \Serializable::unserialize() */
-	public function unserialize($serialized)
-	{
-		list (
-			$this->id,
-			$this->username,
-			$this->password,
-			) = unserialize($serialized);
-	}
-
-	public function isAccountNonExpired()
-	{
-		return true;
-	}
-
-	public function isAccountNonLocked()
-	{
-		return true;
-	}
-
-	public function isCredentialsNonExpired()
-	{
-		return true;
-	}
-
-	public function getSalt()
-	{
-		// you *may* need a real salt depending on your encoder
-		// see section on salt below
-		return null;
-	}
-
-	public function setUserRoles( $userRoles )
-	{
-		$this->userRoles = $userRoles;
-	}
-
-	public function getUserRoles() {
-
-		$result = array();
-
-		foreach( $this->userRoles as $userRole )
-		{
-			$result[] = $userRole;
-		}
-
-		return $result;
-	}
-
-	public function getRoles()
-	{
-		$roles = array();
-		foreach( $this->userRoles as $role )
-		{
-			$roles[] = 'ROLE_' . $role->getRole()->getName();
-		}
-		//CommonService::debug( $roles ); exit;
-		return $roles;
-	}
-
-	public function setUserRoleIds( $userRoleIds )
-	{
-		if ( is_array( $userRoleIds ) )
-		{
-			$this->userRoleIds = $userRoleIds;
-		}
-	}
-
-	public function getUserRoleIds() {
-		return $this->userRoleIds;
-	}
-
-	public function getRolesString()
-	{
-		return implode( ", ", str_replace( 'ROLE_', '', $this->getRoles() ) );
-	}
-
-	public function eraseCredentials()
-	{
-	}
-
-	public function isEnabled()
-	{
-		return $this->isActive;
-	}
-
-	public function debug()
-	{
-		CommonService::debug( $this->getUsername() );
-		CommonService::debug( $this->getRoles() );
-	}
-
-    /**
-     * Add user role
+     * Set assetid
      *
-     * @param \Swd\CoreBundle\Entity\UserRole $userRole
+     * @param integer $assetid
      *
      * @return User
      */
-    public function addUserRole(\Swd\CoreBundle\Entity\UserRole $userRole)
+    public function setAssetid($assetid)
     {
-        $this->userRoles[] = $userRole;
-		//$userRole->setUser($this);
+        $this->assetid = $assetid;
 
         return $this;
     }
 
     /**
-     * Remove user role
+     * Get assetid
      *
-     * @param \Swd\CoreBundle\Entity\UserRole $userRole
+     * @return integer
      */
-    public function removeUserRole(\Swd\CoreBundle\Entity\UserRole $userRole)
+    public function getAssetid()
     {
-        $this->userRoles->removeElement($userRole);
+        return $this->assetid;
     }
 
-	/**
-	 * Get assetId
-	 * @return string
-	 */
-	public function getAssetId()
-	{
-		return $this->assetId;
-	}
+    /**
+     * Set createdby
+     *
+     * @param integer $createdby
+     *
+     * @return User
+     */
+    public function setCreatedby($createdby)
+    {
+        $this->createdby = $createdby;
 
-	/**
-	 * Set assetId
-	 * @param string $assetId
-	 * @return User
-	 */
-	public function setAssetId($assetId)
-	{
-		$this->assetId = $assetId;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Get createdby
+     *
+     * @return integer
+     */
+    public function getCreatedby()
+    {
+        return $this->createdby;
+    }
 
-	/**
-	 * Get asset
-	 * @return string
-	 */
-	public function getAsset()
-	{
-		return $this->asset;
-	}
+    /**
+     * Set updatedby
+     *
+     * @param integer $updatedby
+     *
+     * @return User
+     */
+    public function setUpdatedby($updatedby)
+    {
+        $this->updatedby = $updatedby;
 
-	/**
-	 * Set asset
-	 * @param object $asset
-	 * @return Swd/CoreBundle/Entity/Asset
-	 */
-	public function setAsset( $asset )
-	{
-		$this->asset = $asset;
+        return $this;
+    }
 
-		return $this;
-	}
-
-
-	/**
-	 * Set profileImageUrl
-	 * @param string $profileImageUrl
-	 * @return User
-	 */
-	public function setProfileImageUrl($profileImageUrl)
-	{
-		$this->profileImageUrl = $profileImageUrl;
-
-		return $this;
-	}
-
-	/**
-	 * Get profileImageUrl
-	 * @return string
-	 */
-	public function getProfileImageUrl()
-	{
-		return $this->profileImageUrl;
-	}
-
-	/**
-	 * Set profileImageData
-	 * @param string $profileImageData
-	 * @return User
-	 */
-	public function setProfileImageData($profileImageData)
-	{
-		$this->profileImageData = $profileImageData;
-
-		return $this;
-	}
-
-	/**
-	 * Get profileImageData
-	 * @return string
-	 */
-	public function getProfileImageData()
-	{
-		return $this->profileImageData;
-	}
-
-	/**
-	 * Get profileImageUrl
-	 * @return string
-	 */
-	public function getProfileImageUrlTag( $width = 24, $height = 24 )
-	{
-		if ( strlen( $this->profileImageUrl ) > 0 )
-		{
-			return '<img src="' . $this->getProfileImageUrl() . '" width="' . $width . '", height="' . $height . '">';
-		}
-	}
+    /**
+     * Get updatedby
+     *
+     * @return integer
+     */
+    public function getUpdatedby()
+    {
+        return $this->updatedby;
+    }
 }

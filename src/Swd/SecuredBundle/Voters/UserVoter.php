@@ -2,7 +2,7 @@
 
 namespace Swd\SecuredBundle\Voters;
 
-use Swd\CoreBundle\Entity\User;
+use Swd\CoreBundle\Object\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;

@@ -1,26 +1,15 @@
 <?php
 
-namespace Swd\CoreBundle\Entity;
+namespace Swd\CoreBundle\Object;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * MovieItemDirector
  *
- * @ORM\Table(name="movie_item_director", indexes={@ORM\Index(name="item_id", columns={"item_id"}), @ORM\Index(name="director_id", columns={"director_id"}), @ORM\Index(name="item_director", columns={"item_id", "director_id"})})
- * @ORM\Entity
  */
 class MovieItemDirector
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="bigint", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
     /**
      * @var integer
      *
@@ -35,17 +24,16 @@ class MovieItemDirector
      */
     private $directorId;
 
-
-
     /**
-     * Get id
+     * @var integer
      *
-     * @return integer
+     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $id;
+
+
 
     /**
      * Set itemId
@@ -93,5 +81,15 @@ class MovieItemDirector
     public function getDirectorId()
     {
         return $this->directorId;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

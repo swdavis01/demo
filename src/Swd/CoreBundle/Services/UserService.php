@@ -2,9 +2,9 @@
 
 namespace Swd\CoreBundle\Services;
 
-use Swd\CoreBundle\Entity\Role;
-use Swd\CoreBundle\Entity\User;
-use Swd\CoreBundle\Entity\UserRole;
+use Swd\CoreBundle\Object\Role;
+use Swd\CoreBundle\Object\User;
+use Swd\CoreBundle\Object\UserRole;
 use Swd\CoreBundle\Services\CommonService;
 use Swd\CoreBundle\Database\Database;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -174,6 +174,7 @@ class UserService extends BaseService
 				$user->setCreated( $row['created'] );
 				$user->setUpdated( $row['updated'] );
 				$user->setProfileImageUrl( $row['profileImageUrl'] );
+				//echo "Fuck Off"; exit;
 				//$user->setProfileImageData( $this->assetService->getObject( $row['profileImagePath'], $row['profileImageName'] ) );
 			}
 

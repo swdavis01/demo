@@ -3,7 +3,7 @@
 security:
 
     encoders:
-        Swd\CoreBundle\Entity\User:
+        Swd\CoreBundle\Object\User:
             algorithm: bcrypt
             cost: 12
 

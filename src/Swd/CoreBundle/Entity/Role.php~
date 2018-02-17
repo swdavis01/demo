@@ -7,15 +7,41 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Role
  *
- * @ORM\Table(name="role", indexes={
- *     @ORM\Index(name="name", columns={"name"}),
- *     @ORM\Index(name="section", columns={"section"}),
- *     @ORM\Index(name="priority", columns={"priority"})
- * })
+ * @ORM\Table(name="role", indexes={@ORM\Index(name="name", columns={"name"})})
  * @ORM\Entity
  */
 class Role
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=true)
+     */
+    private $isActive = '1';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="can_delete", type="boolean", nullable=true)
+     */
+    private $canDelete = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="priority", type="smallint", nullable=true)
+     */
+    private $priority = '0';
+
     /**
      * @var string
      *
@@ -24,118 +50,26 @@ class Role
     private $name;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="section", type="string", length=255, nullable=false)
      */
-    private $id;
-
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(name="section", type="string", length=255, nullable=true)
-	 */
-	private $section;
-
-	/**
-	 * @var priority
-	 *
-	 * @ORM\Column(name="priority", type="smallint", nullable=false)
-	 */
-	private $priority;
+    private $section;
 
     /**
-     * Set name
+     * @var \DateTime
      *
-     * @param string $name
-     *
-     * @return Role
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    private $created = 'CURRENT_TIMESTAMP';
 
     /**
-     * Get name
+     * @var \DateTime
      *
-     * @return string
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-	/**
-	 * @ORM\OneToMany(targetEntity="UserRole", mappedBy="role")
-	 */
-	protected $users;
-
-	public function __construct() {
-		$this->users = new \Doctrine\Common\Collections\ArrayCollection();
-	}
-
-    /**
-     * Set section
-     *
-     * @param string $section
-     *
-     * @return Role
-     */
-    public function setSection($section)
-    {
-        $this->section = $section;
-
-        return $this;
-    }
-
-    /**
-     * Get section
-     *
-     * @return string
-     */
-    public function getSection()
-    {
-        return $this->section;
-    }
-
-	/**
-	 * Set priority
-	 *
-	 * @param smallint $priority
-	 *
-	 * @return Role
-	 */
-	public function setPriority($priority)
-	{
-		$this->priority = $priority;
-
-		return $this;
-	}
-
-	/**
-	 * Get priority
-	 *
-	 * @return smallint
-	 */
-	public function getPriority()
-	{
-		return $this->priority;
-	}
+    private $updated = 'CURRENT_TIMESTAMP';
 
 
 }
+

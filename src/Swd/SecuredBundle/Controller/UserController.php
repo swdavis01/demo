@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Swd\CoreBundle\Services\DateService;
 use Swd\SecuredBundle\Voters\UserVoter;
 use Swd\SecuredBundle\Forms\UserType;
-use Swd\CoreBundle\Entity\User;
+use Swd\CoreBundle\Object\User;
 use Aws\S3\S3Client;
 
 class UserController extends Controller

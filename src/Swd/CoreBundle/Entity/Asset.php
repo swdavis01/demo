@@ -2,407 +2,437 @@
 
 namespace Swd\CoreBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Asset
+ *
+ * @ORM\Table(name="asset", indexes={@ORM\Index(name="createdBy", columns={"createdBy"}), @ORM\Index(name="updatedBy", columns={"updatedBy"}), @ORM\Index(name="manager", columns={"manager"}), @ORM\Index(name="name", columns={"name"}), @ORM\Index(name="type", columns={"type"})})
+ * @ORM\Entity
  */
 class Asset
 {
-	/**
-	 * @var integer
-	 */
-	private $id;
-	/**
-	 * @var int
-	 */
-	private $createdBy;
-	/**
-	 * @var string
-	 */
-	private $createdByName;
-	/**
-	 * @var int
-	 */
-	private $updatedBy;
-	/**
-	 * @var string
-	 */
-	private $updatedByName;
-	/**
-	 * @var int
-	 */
-	private $isActive;
-	/**
-	 * @var int
-	 */
-	private $canDelete;
-	/**
-	 * @var int
-	 */
-	private $size;
-	/**
-	 * @var string
-	 */
-	private $manager;
-	/**
-	 * @var string
-	 */
-	private $url;
-	/**
-	 * @var string
-	 */
-	private $tag;
-	/**
-	 * @var string
-	 */
-	private $name;
-	/**
-	 * @var string
-	 */
-	private $type;
-	/**
-	 * @var datetime
-	 */
-	private $created;
-	/**
-	 * @var datetime
-	 */
-	private $updated;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-	/**
-	 * Get id
-	 * @return integer
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="createdBy", type="bigint", nullable=false)
+     */
+    private $createdby = '0';
 
-	/**
-	 * Set id
-	 * @param int $id
-	 * @return Asset
-	 */
-	public function setId( $id )
-	{
-		$this->id = $id;
-		return $this;
-	}
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updatedBy", type="bigint", nullable=false)
+     */
+    private $updatedby = '0';
 
-	/**
-	 * Get createdBy
-	 * @return integer
-	 */
-	public function getCreatedBy()
-	{
-		return $this->createdBy;
-	}
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isActive", type="boolean", nullable=true)
+     */
+    private $isactive = '1';
 
-	/**
-	 * Set createdBy
-	 * @param int $createdBy
-	 * @return Asset
-	 */
-	public function setCreatedBy( $createdBy )
-	{
-		$this->createdBy = $createdBy;
-		return $this;
-	}
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="canDelete", type="boolean", nullable=true)
+     */
+    private $candelete = '1';
 
-	/**
-	 * Get createdByName
-	 * @return string
-	 */
-	public function getCreatedByName()
-	{
-		return $this->createdByName;
-	}
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="size", type="bigint", nullable=false)
+     */
+    private $size = '0';
 
-	/**
-	 * Set createdByName
-	 * @param string $createdByName
-	 * @return Asset
-	 */
-	public function setCreatedByName( $createdByName )
-	{
-		$this->createdByName = $createdByName;
-		return $this;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="manager", type="string", length=50, nullable=false)
+     */
+    private $manager = '';
 
-	/**
-	 * Get updatedBy
-	 * @return integer
-	 */
-	public function getUpdatedBy()
-	{
-		return $this->updatedBy;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255, nullable=false)
+     */
+    private $url = '';
 
-	/**
-	 * Set updatedBy
-	 * @param int $updatedBy
-	 * @return Asset
-	 */
-	public function setUpdatedBy( $updatedBy )
-	{
-		$this->updatedBy = $updatedBy;
-		return $this;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag", type="string", length=255, nullable=false)
+     */
+    private $tag = '';
 
-	/**
-	 * Get updatedByName
-	 * @return string
-	 */
-	public function getUpdatedByName()
-	{
-		return $this->updatedByName;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
+    private $name = '';
 
-	/**
-	 * Set updatedByName
-	 * @param string $updatedByName
-	 * @return Asset
-	 */
-	public function setUpdatedByName( $updatedByName )
-	{
-		$this->updatedByName = $updatedByName;
-		return $this;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=100, nullable=false)
+     */
+    private $type = '';
 
-	/**
-	 * Get isActive
-	 * @return integer
-	 */
-	public function getIsActive()
-	{
-		return $this->isActive;
-	}
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
 
-	/**
-	 * Set isActive
-	 * @param int $isActive
-	 * @return Asset
-	 */
-	public function setIsActive( $isActive )
-	{
-		$this->isActive = $isActive;
-		return $this;
-	}
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
 
-	/**
-	 * Get canDelete
-	 * @return integer
-	 */
-	public function getCanDelete()
-	{
-		return $this->canDelete;
-	}
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=255, nullable=false)
+     */
+    private $path = '';
 
-	/**
-	 * Set canDelete
-	 * @param int $canDelete
-	 * @return Asset
-	 */
-	public function setCanDelete( $canDelete )
-	{
-		$this->canDelete = $canDelete;
-		return $this;
-	}
 
-	/**
-	 * Get size
-	 * @return integer
-	 */
-	public function getSize()
-	{
-		return $this->size;
-	}
 
-	/**
-	 * Set size
-	 * @param int $size
-	 * @return Asset
-	 */
-	public function setSize( $size )
-	{
-		$this->size = $size;
-		return $this;
-	}
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * Get manager
-	 * @return string
-	 */
-	public function getManager()
-	{
-		return $this->manager;
-	}
+    /**
+     * Set createdby
+     *
+     * @param integer $createdby
+     *
+     * @return Asset
+     */
+    public function setCreatedby($createdby)
+    {
+        $this->createdby = $createdby;
 
-	/**
-	 * Set manager
-	 * @param string $manager
-	 * @return Asset
-	 */
-	public function setManager( $manager )
-	{
-		$this->manager = $manager;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get url
-	 * @return string
-	 */
-	public function getUrl()
-	{
-		return $this->url;
-	}
+    /**
+     * Get createdby
+     *
+     * @return integer
+     */
+    public function getCreatedby()
+    {
+        return $this->createdby;
+    }
 
-	/**
-	 * Set url
-	 * @param string $url
-	 * @return Asset
-	 */
-	public function setUrl( $url )
-	{
-		$this->url = $url;
-		return $this;
-	}
+    /**
+     * Set updatedby
+     *
+     * @param integer $updatedby
+     *
+     * @return Asset
+     */
+    public function setUpdatedby($updatedby)
+    {
+        $this->updatedby = $updatedby;
 
-	/**
-	 * Get tag
-	 * @return string
-	 */
-	public function getTag()
-	{
-		return $this->tag;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set tag
-	 * @param string $tag
-	 * @return Asset
-	 */
-	public function setTag( $tag )
-	{
-		$this->tag = $tag;
-		return $this;
-	}
+    /**
+     * Get updatedby
+     *
+     * @return integer
+     */
+    public function getUpdatedby()
+    {
+        return $this->updatedby;
+    }
 
-	/**
-	 * Get name
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * Set isactive
+     *
+     * @param boolean $isactive
+     *
+     * @return Asset
+     */
+    public function setIsactive($isactive)
+    {
+        $this->isactive = $isactive;
 
-	/**
-	 * Set name
-	 * @param string $name
-	 * @return Asset
-	 */
-	public function setName( $name )
-	{
-		$this->name = $name;
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get type
-	 * @return string
-	 */
-	public function getType()
-	{
-		return $this->type;
-	}
+    /**
+     * Get isactive
+     *
+     * @return boolean
+     */
+    public function getIsactive()
+    {
+        return $this->isactive;
+    }
 
-	/**
-	 * Set type
-	 * @param string $type
-	 * @return Asset
-	 */
-	public function setType( $type )
-	{
-		$this->type = $type;
-		return $this;
-	}
+    /**
+     * Set candelete
+     *
+     * @param boolean $candelete
+     *
+     * @return Asset
+     */
+    public function setCandelete($candelete)
+    {
+        $this->candelete = $candelete;
 
-	/**
-	 * Get created
-	 * @return \DateTime
-	 */
-	public function getCreated()
-	{
-		return $this->created;
-	}
+        return $this;
+    }
 
-	/**
-	 * Set created
-	 * @param \DateTime $created
-	 * @return Asset
-	 */
-	public function setCreated($created)
-	{
-		$this->created = $created;
-		return $this;
-	}
+    /**
+     * Get candelete
+     *
+     * @return boolean
+     */
+    public function getCandelete()
+    {
+        return $this->candelete;
+    }
 
-	/**
-	 * Get created
-	 * @return string
-	 */
-	public function getCreatedDateTime()
-	{
-		return DateService::getDateTime( $this->created );
-	}
+    /**
+     * Set size
+     *
+     * @param integer $size
+     *
+     * @return Asset
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
 
-	/**
-	 * Get created
-	 * @return string
-	 */
-	public function getCreatedDateTimeFormat()
-	{
-		return DateService::formatDateTimeString( $this->created );
-	}
+        return $this;
+    }
 
-	/**
-	 * Get updated
-	 *
-	 * @return \DateTime
-	 */
-	public function getUpdated()
-	{
-		return $this->updated;
-	}
+    /**
+     * Get size
+     *
+     * @return integer
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
 
-	/**
-	 * Set updated
-	 * @param \DateTime $updated
-	 * @return Asset
-	 */
-	public function setUpdated( $updated )
-	{
-		$this->updated = $updated;
+    /**
+     * Set manager
+     *
+     * @param string $manager
+     *
+     * @return Asset
+     */
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get updated
-	 * @return string
-	 */
-	public function getUpdatedDateTime()
-	{
-		return DateService::getDateTime( $this->updated );
-	}
+    /**
+     * Get manager
+     *
+     * @return string
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
 
-	/**
-	 * Get updated
-	 * @return string
-	 */
-	public function getUpdatedDateTimeFormat()
-	{
-		return DateService::formatDateTimeString( $this->updated );
-	}
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Asset
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set tag
+     *
+     * @param string $tag
+     *
+     * @return Asset
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Get tag
+     *
+     * @return string
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Asset
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Asset
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return Asset
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return Asset
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set path
+     *
+     * @param string $path
+     *
+     * @return Asset
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 }

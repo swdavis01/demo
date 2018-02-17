@@ -13,6 +13,22 @@ use Doctrine\ORM\Mapping as ORM;
 class MovieFormat
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=true)
+     */
+    private $isActive = '1';
+
+    /**
      * @var string
      *
      * @ORM\Column(name="format", type="string", length=50, nullable=false)
@@ -20,47 +36,19 @@ class MovieFormat
     private $format;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $id;
-
-
+    private $created = 'CURRENT_TIMESTAMP';
 
     /**
-     * Set format
+     * @var \DateTime
      *
-     * @param string $format
-     *
-     * @return MovieFormat
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    public function setFormat($format)
-    {
-        $this->format = $format;
+    private $updated = 'CURRENT_TIMESTAMP';
 
-        return $this;
-    }
 
-    /**
-     * Get format
-     *
-     * @return string
-     */
-    public function getFormat()
-    {
-        return $this->format;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 }
+

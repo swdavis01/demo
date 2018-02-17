@@ -61,6 +61,13 @@ php bin/console doctrine:cache:clear-metadata
 php bin/console doctrine:cache:clear-query  
 php bin/console doctrine:cache:clear-result
 
+## Create XML
+php bin/console doctrine:mapping:import --force CoreBundle xml
+## Convert XML to entities with vars
+ php bin/console doctrine:mapping:import CoreBundle annotation
+## Add getters / setters to entities
+php bin/console doctrine:generate:entities CoreBundle
+
 ## Session Management
 app/config/config.yml  
 framework:  

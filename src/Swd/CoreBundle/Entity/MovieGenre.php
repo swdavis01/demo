@@ -13,6 +13,22 @@ use Doctrine\ORM\Mapping as ORM;
 class MovieGenre
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean", nullable=true)
+     */
+    private $isActive = '1';
+
+    /**
      * @var string
      *
      * @ORM\Column(name="genre", type="string", length=50, nullable=false)
@@ -20,15 +36,54 @@ class MovieGenre
     private $genre;
 
     /**
-     * @var integer
+     * @var \DateTime
      *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $id;
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     *
+     * @return MovieGenre
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
 
     /**
      * Set genre
@@ -55,12 +110,50 @@ class MovieGenre
     }
 
     /**
-     * Get id
+     * Set created
      *
-     * @return integer
+     * @param \DateTime $created
+     *
+     * @return MovieGenre
      */
-    public function getId()
+    public function setCreated($created)
     {
-        return $this->id;
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return MovieGenre
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 }

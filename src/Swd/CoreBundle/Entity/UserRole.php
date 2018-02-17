@@ -2,29 +2,50 @@
 
 namespace Swd\CoreBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * UserRole
+ *
+ * @ORM\Table(name="user_role", indexes={@ORM\Index(name="user_id", columns={"user_id"}), @ORM\Index(name="role_id", columns={"role_id"})})
+ * @ORM\Entity
  */
 class UserRole
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id", type="bigint", nullable=false)
      */
     private $userId;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="role_id", type="bigint", nullable=false)
      */
     private $roleId;
 
-    /**
-     * @var integer
-     */
-    private $id;
 
-	/**
-	 */
-	private $role;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set userId
@@ -73,35 +94,4 @@ class UserRole
     {
         return $this->roleId;
     }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-	/**
-	 * Get role
-	 *
-	 * @return Swd\CoreBundle\Entity\Role
-	 */
-	public function getRole()
-	{
-		return $this->role;
-	}
-
-	/**
-	 * @param $role
-	 * @return $this
-	 */
-	public function setRole($role)
-	{
-		$this->role = $role;
-
-		return $this;
-	}
 }

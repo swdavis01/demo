@@ -25,7 +25,7 @@ class UserProvider implements UserProviderInterface
 
 	/**
 	 * @param string $username
-	 * @return \Swd\CoreBundle\Entity\User
+	 * @return \Swd\CoreBundle\Object\User
 	 */
 	public function loadUserByUsername($username)
 	{
@@ -40,7 +40,7 @@ class UserProvider implements UserProviderInterface
 
 	/**
 	 * @param UserInterface $user
-	 * @return \Swd\CoreBundle\Entity\User|UserInterface
+	 * @return \Swd\CoreBundle\Object\User|UserInterface
 	 */
 	public function refreshUser(UserInterface $user)
 	{
@@ -69,6 +69,6 @@ class UserProvider implements UserProviderInterface
 	 */
 	public function supportsClass($class)
 	{
-		return $class === "Swd\\CoreBundle\\Entity\\User";
+		return $class === "Swd\\CoreBundle\\Object\\User";
 	}
 }

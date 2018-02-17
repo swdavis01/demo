@@ -1,0 +1,117 @@
+<?php
+
+namespace Swd\CoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Asset
+ *
+ * @ORM\Table(name="asset", indexes={@ORM\Index(name="createdBy", columns={"createdBy"}), @ORM\Index(name="updatedBy", columns={"updatedBy"}), @ORM\Index(name="manager", columns={"manager"}), @ORM\Index(name="name", columns={"name"}), @ORM\Index(name="type", columns={"type"})})
+ * @ORM\Entity
+ */
+class Asset
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="createdBy", type="bigint", nullable=false)
+     */
+    private $createdby = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updatedBy", type="bigint", nullable=false)
+     */
+    private $updatedby = '0';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isActive", type="boolean", nullable=true)
+     */
+    private $isactive = '1';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="canDelete", type="boolean", nullable=true)
+     */
+    private $candelete = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="size", type="bigint", nullable=false)
+     */
+    private $size = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="manager", type="string", length=50, nullable=false)
+     */
+    private $manager = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=255, nullable=false)
+     */
+    private $url = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag", type="string", length=255, nullable=false)
+     */
+    private $tag = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
+    private $name = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=100, nullable=false)
+     */
+    private $type = '';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="path", type="string", length=255, nullable=false)
+     */
+    private $path = '';
+
+
+}
+
