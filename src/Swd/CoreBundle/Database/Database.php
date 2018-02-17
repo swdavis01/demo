@@ -54,11 +54,15 @@ class Database
 
 	public function fetchAll($sql, $params = array())
 	{
+	    //$fetchType = PDO::FETCH_ASSOC;
+
+	    extract( $params );
+
 		$st = $this->execute($sql, $params);
 
 		try
 		{
-			$results = $st->fetchAll(PDO::FETCH_ASSOC);
+            $results = $st->fetchAll( PDO::FETCH_ASSOC );
 		}
 		catch (PDOException $ex)
 		{

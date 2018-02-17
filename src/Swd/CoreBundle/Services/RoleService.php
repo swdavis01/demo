@@ -15,7 +15,7 @@ class RoleService extends BaseService
 	 */
 	public function __construct( Database $db, \Swd\CoreBundle\Services\AssetService $assetService )
 	{
-		parent::__construct( $db );
+		parent::__construct( $db, $assetService );
 	}
 
 	/**

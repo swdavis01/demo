@@ -15,3 +15,8 @@ services:
     swd_core_role_service:
         class: Swd\CoreBundle\Services\RoleService
         arguments: ["@swd_core_db", "@swd_core_asset_service"]
+
+    swd_core_entity_service:
+        class: Swd\CoreBundle\Services\EntityService
+        arguments: ["@swd_core_db", "@swd_core_asset_service"]
+
