@@ -3,6 +3,8 @@
 namespace Swd\CoreBundle\Services;
 
 use Swd\CoreBundle\Database\Database;
+use Swd\CoreBundle\Entity\Table;
+use Swd\CoreBundle\Entity\TableField;
 use Swd\CoreBundle\Services\AssetService;
 use Swd\CoreBundle\Util\ConsoleLogger;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -76,19 +78,20 @@ class BaseService
 	}
 
     /**
-     * @return array
+     * @return array Table
      */
     protected function getTablesWithFields()
     {
         $values = array();
-        foreach( $this->getTables() as $table)
+        foreach( $this->getTables() as $t)
         {
-            $row = array
-            (
-                'table' => $table,
-                'fields' => $this->getTableFields( $table )
-            );
-            $values[] = $row;
+            $table = Table::get()->setName( $t );
+            foreach( $this->getTableFields( $t ) as $f )
+            {
+                $field = TableField::get()->setField( $f['Field'] )->setType( $f['Type'] );
+                $table->addField( $field );
+            }
+            $values[] = $table;
         }
         return $values;
     }
