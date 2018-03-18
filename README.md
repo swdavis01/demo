@@ -81,6 +81,9 @@ src\Swd\SecuredBundle\Resources\config\security.yml
 ## ip-address
 192.168.56.101
 
+## Check version
+bin/console --version
+
 ## Cache  
 php bin/console cache:clear --env=dev
 If problems:
