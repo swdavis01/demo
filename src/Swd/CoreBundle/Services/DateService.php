@@ -21,9 +21,12 @@ class DateService
 		return self::formatDateTime( $date );
 	}
 
-	public static function getDateTime( string $date )
+	public static function getDateTime( $date )
 	{
-		$date = new \DateTime( $date );
+	    if ( !$date instanceof \DateTime )
+        {
+            $date = new \DateTime( $date );
+        }
 
 		return $date->format( self::DATE_TIME );
 	}

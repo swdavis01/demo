@@ -52,17 +52,22 @@ class Database
 		return $st;
 	}
 
-	public function fetchAll($sql, $params = array())
+	public function fetchAll( $sql, $params = array(), $fetchType = PDO::FETCH_ASSOC, $className = '' )
 	{
-	    //$fetchType = PDO::FETCH_ASSOC;
-
 	    extract( $params );
 
 		$st = $this->execute($sql, $params);
 
 		try
 		{
-            $results = $st->fetchAll( PDO::FETCH_ASSOC );
+		    if ( $fetchType == PDO::FETCH_CLASS && strlen( $className ) > 0 )
+            {
+                $results = $st->fetchAll( $fetchType, $className );
+            }
+            else
+            {
+                $results = $st->fetchAll( $fetchType );
+            }
 		}
 		catch (PDOException $ex)
 		{

@@ -210,7 +210,7 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	public function getCreatedDateTimeFormat()
 	{
-		return DateService::formatDateTimeString( $this->created );
+		return DateService::formatDateTime( $this->created );
 	}
 
     /**
@@ -254,7 +254,7 @@ class User implements AdvancedUserInterface, \Serializable
 	 */
 	public function getUpdatedDateTimeFormat()
 	{
-		return DateService::formatDateTimeString( $this->updated );
+		return DateService::formatDateTime( $this->updated );
 	}
 
     /**

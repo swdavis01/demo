@@ -118,13 +118,13 @@ class UserService extends BaseService
 
 		extract( $this->parseParams( "u.", $params ) );
 
-		$placeholders[':isActive'] = $isActive;
+		$placeholders['isActive'] = $isActive;
 
 		if ( strlen( $search ) > 0 )
 		{
 			$where .= " AND (u.name LIKE :search1 OR u.username LIKE :search2)";
-			$placeholders[':search1'] = "" . $search . "%";
-			$placeholders[':search2'] = "" . $search . "%";
+			$placeholders['search1'] = "" . $search . "%";
+			$placeholders['search2'] = "" . $search . "%";
 		}
 
 		if ( strlen( $where ) > 0 )
@@ -155,10 +155,10 @@ class UserService extends BaseService
     			u.isActive = :isActive " . $where . " 
     		ORDER BY 
     			" . $orderBy . " " . $sortBy;
-		$result = $this->db->fetchAll( $sql, $placeholders );
+		$result = $this->db->fetchAll( $sql, $placeholders, \PDO::FETCH_CLASS, 'Swd\CoreBundle\Entity\User' );
 		foreach( $result as $row )
 		{
-			$id = $row['id'];
+			$id = $row->getId();
 
 			if ( isset( $values[ $id ] ) )
 			{
@@ -166,25 +166,25 @@ class UserService extends BaseService
 			}
 			else
 			{
-				$user = new User();
-				$user->setId( $row['id'] );
+				$user = $row;
+				/*$user->setId( $row['id'] );
 				$user->setUsername( $row['username'] );
 				$user->setName( $row['name'] );
 				$user->setPassword( $row['password'] );
 				$user->setCreated( $row['created'] );
 				$user->setUpdated( $row['updated'] );
-				$user->setProfileImageUrl( $row['profileImageUrl'] );
+				$user->setProfileImageUrl( $row['profileImageUrl'] );*/
 				//$user->setProfileImageData( $this->assetService->getObject( $row['profileImagePath'], $row['profileImageName'] ) );
 			}
 
 			$role = new Role();
-			$role->setName( $row['rowName'] );
-			$role->setSection( $row['rowSection'] );
-			$role->setPriority( $row['rowPriority'] );
+			$role->setName( $row->rowName );
+			$role->setSection( $row->rowSection );
+			$role->setPriority( $row->rowPriority );
 
 			$userRole = new UserRole();
-			$userRole->setRoleId( $row['role_id'] );
-			$userRole->setUserId( $row['id'] );
+			$userRole->setRoleId( $row->role_id );
+			$userRole->setUserId( $user->getId() );
 			$userRole->setRole( $role );
 
 			$user->addUserRole( $userRole );
